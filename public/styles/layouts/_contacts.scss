@@ -1,0 +1,18 @@
+.contacts {
+  list-style: none;
+  overflow: hidden;
+}
+
+.contact-list {
+  position: relative;
+
+  &__label {
+    display: block;
+    width: 100%;
+    padding: 1rem;
+
+    text-align: right;
+    font-size: var(--font-24);
+    color: var(--tertiary-color);
+  }
+}
