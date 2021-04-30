@@ -1,0 +1,26 @@
+@mixin setProperties($map, $withSubitem: false) {
+  @if $withSubitem == true {
+    @each $item, $subitem in $map {
+      @each $prop, $value in $subitem {
+        --#{$item}-#{$prop}: #{$value};
+      }
+    }
+  } @else {
+    @each $item, $value in $map {
+      --#{$item}: #{$value};
+    }
+  }
+}
+
+@mixin breakpoint($breakpoint) {
+  @if map-has-key($breakpoints, $breakpoint) {
+    @media #{inspect(map-get($breakpoints, $breakpoint))} {
+      @content;
+    }
+  }
+
+  @else {
+    @error 'No value found for `#{$breakpoint}`. '
+         + 'Please make sure it is defined in `$breakpoints` map.';
+  }
+}
