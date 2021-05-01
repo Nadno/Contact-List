@@ -30,9 +30,17 @@ export default class Contacts extends Component {
     this.handleToggleSettings = this.handleToggleSettings.bind(this);
   }
 
+  private setButtonAriaChecked(bool: string) {
+    if (this.$settingPosition) {
+      const $button = this.$settingPosition.querySelector('.settings-button');
+      if ($button) $button.setAttribute('aria-checked', bool);
+    }
+  }
+
   public turnSettingPositionOff() {
     if (this.$settingPosition) {
-      this.$settingPosition.setAttribute('aria-checked', 'false');
+      this.setButtonAriaChecked('false');
+
       this.$settingPosition.classList.remove('on');
       this.$settingPosition = null;
     }
@@ -42,21 +50,20 @@ export default class Contacts extends Component {
     let target = e.target as HTMLElement;
     const parent = target.parentNode as HTMLElement;
 
-    if (parent && parent.matches('.contact__edit')) {
+    if (parent && parent.matches('.settings-button')) {
       target = parent;
     }
 
-    if (target.matches('.contact__edit')) {
-      if (target.matches('.on')) {
+    if (target.matches('.settings-button')) {
+      if (target.matches('[aria-checked="true"]')) {
         const turnSettingsOff = () => {
           this.$settings.remove();
           this.$settings.removeEventListener('transitionend', turnSettingsOff);
         };
-        this.$settings.addEventListener('transitionend', turnSettingsOff);
 
+        this.$settings.addEventListener('transitionend', turnSettingsOff);
         this.$settings.setAttribute('aria-hidden', 'true');
         this.turnSettingPositionOff();
-        target.classList.remove('on');
 
         return;
       }
@@ -65,11 +72,11 @@ export default class Contacts extends Component {
         this.turnSettingPositionOff();
       }
 
-      this.$settingPosition = target;
-      this.$settingPosition.insertAdjacentElement('beforeend', this.$settings);
+      this.$settingPosition = target.parentNode as HTMLElement;
+      this.$settingPosition.appendChild(this.$settings);
 
       this.$settings.setAttribute('aria-hidden', 'false');
-      this.$settingPosition.setAttribute('aria-checked', 'true');
+      this.setButtonAriaChecked('true');
 
       const turnSettingsPositionOn = () =>
         (this.$settingPosition as HTMLElement).classList.add('on');
@@ -122,8 +129,7 @@ export default class Contacts extends Component {
   }
 
   public render(): HTMLElement {
-    setTimeout(this.appendContactList, 500);
-
+    setTimeout(this.appendContactList, 1000);
     this.$container.addEventListener('click', this.handleToggleSettings);
     return this.$container;
   }
