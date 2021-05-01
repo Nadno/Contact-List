@@ -21,7 +21,7 @@ export default class Setting extends Component {
     );
 
     const $btn = Component.createElement('button', $dots, {
-      class: 'contact__edit',
+      class: 'settings-button',
       'role': 'switch',
       'aria-label': 'exibir opções de contato'
     });
