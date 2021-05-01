@@ -7,17 +7,10 @@ interface LinkAttrs extends Record<string, string | undefined> {
   content?: string;
 }
 
-const Link = ({
-  title = '',
-  href,
-  className = '',
-  content = '',
-  ...rest
-}: LinkAttrs) => {
+const Link = ({ title = '', href, content = '', ...rest }: LinkAttrs) => {
   const attrs: any = {
-    class: className,
-    href,
     'data-link': '',
+    href,
     ...rest,
   };
 
