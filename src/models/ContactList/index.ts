@@ -1,5 +1,6 @@
 import LinkedList from '../LinkedList';
-import { IContact, IContactsList } from './types';
+import { IListNode } from '../LinkedList/types';
+import { ContactPositions, IContact, IContactsList } from './types';
 
 const ALPHABET_KEYS = 'abcdefghijklmnopqrsuvwxyz';
 
@@ -62,5 +63,32 @@ export default class ContactList implements IContactsList {
     }
 
     this.lists[key].insertSort(contact, this.sortConfig[this.sortMethod]);
+  }
+
+  public deleteContacts(contactsMap: ContactPositions): IContact[] | undefined {
+    const deletedContacts: IContact[] = [];
+
+    for (const key in contactsMap) {
+      const list = this.lists[key];
+      const contactsNodes = list.nodesAt(...contactsMap[key]);
+
+      const deleteContactNode = (node: IListNode<IContact>) => {
+        let deletedNode;
+
+        if (node === list.start) {
+          deletedNode = list.shift();
+        } else if (node === list.end) {
+          deletedNode = list.pop();
+        } else {
+          deletedNode = node.remove();
+        }
+
+        if (deletedNode) deletedContacts.push(deletedNode.value);
+      };
+
+      contactsNodes.forEach(deleteContactNode);
+    }
+
+    return deletedContacts.length ? deletedContacts : undefined;
   }
 }
