@@ -7,9 +7,9 @@ const ALPHABET_KEYS = 'abcdefghijklmnopqrsuvwxyz';
 export default class ContactList implements IContactsList {
   public static especialKey = '#';
 
-  contactProperty;
-  sortMethod: 'crescent' | 'decrescent';
-  sortConfig = {
+  private contactProperty;
+  private sortMethod: 'crescent' | 'decrescent';
+  private sortConfig = {
     crescent: (c1: IContact, c2: IContact) =>
       c1[this.contactProperty as keyof IContact] <
       c2[this.contactProperty as keyof IContact],
@@ -18,12 +18,27 @@ export default class ContactList implements IContactsList {
       c2[this.contactProperty as keyof IContact],
   };
 
-  lists: Record<string, LinkedList<IContact>> = {};
-  favorites: LinkedList<IContact> = new LinkedList();
+  private lists: Record<string, LinkedList<IContact>> = {};
+  private favorites: LinkedList<IContact> = new LinkedList();
 
   constructor(contactProperty = 'name', sortMethod = 'crescent') {
     this.contactProperty = contactProperty;
     this.sortMethod = sortMethod as 'crescent';
+  }
+
+  public *[Symbol.iterator]() {
+    const keys = ALPHABET_KEYS + ContactList.especialKey;
+
+    for (const letter of keys) {
+      let index = 0;
+
+      if (letter in this.lists) {
+        for (const node of this.lists[letter]) {
+          yield { contact: node, index, letter };
+          index++;
+        }
+      }
+    }
   }
 
   private normalize(content: string): string {
