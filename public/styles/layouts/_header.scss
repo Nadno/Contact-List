@@ -1,0 +1,54 @@
+@import '../components/input';
+
+.header {
+  height: 5rem;
+  display: flex;
+  align-items: center;
+
+  margin-bottom: 3rem;
+  background-color: #fff;
+
+  &__add-contact {
+    display: block;
+    width: 5rem;
+    height: 100%;
+
+    display: flex;
+    justify-content: center;
+    align-items: center;
+
+    font-weight: bold;
+    font-size: var(--font-24);
+  }
+}
+
+.search {
+  height: 100%;
+  width: 100%;
+
+  padding: 0 1rem;
+  font-size: var(--font-16);
+
+  border: none;
+  border-bottom: 1px solid var(--primary-color);
+
+  &-bar {
+    width: 95%;
+    height: 100%;
+    display: flex;
+    padding-left: 1rem;
+    border-right: 1px solid var(--primary-color);
+  }
+
+  &__button {
+    cursor: pointer;
+    height: 100%;
+    border: none;
+    background-color: initial;
+
+    padding: 0.5rem 1rem;
+
+    font-size: var(--font-16);
+    color: var(--secondary-color);
+  }
+}
