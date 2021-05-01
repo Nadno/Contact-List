@@ -1,21 +1,26 @@
 import Component from '../../component';
 import PageComponent from '../PageComponent';
 import Contacts from '../../Contact/Contacts';
+import Header from '../../Header';
 
 import { AppContext } from '../../../App';
 
 import '../../../../public/styles/views/home.scss';
 
 export default class Home extends PageComponent {
-  $element: Component;
+  $elements: HTMLElement[];
 
   constructor(ctx: AppContext) {
     super();
     this.setTitle('Contacts');
-    this.$element = new Contacts(ctx);
+
+    const $header = new Header().render();
+    const $contactList = new Contacts(ctx).render();
+
+    this.$elements = [$header, $contactList];
   }
 
   public render(): HTMLElement {
-    return this.$element.render();
+    return Component.createElement('div', this.$elements);
   }
 }
