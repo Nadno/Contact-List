@@ -11,7 +11,7 @@ export default class Contact extends Component {
     const $name = Link({
       content: name,
       href: `/contact?id=${id}`,
-      className: 'contact__name',
+      class: 'contact__name',
     });
 
     const $edit = Settings.SettingButton();
