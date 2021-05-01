@@ -2,3 +2,41 @@
 @import '../components/settings';
 
 @import '../layouts/contacts';
+
+
+.settings-container {
+  height: 100%;
+
+  &.on {
+    .settings {
+      border-color: var(--secondary-color);
+
+      &-list {
+        opacity: 1;
+        pointer-events: initial;
+      }
+
+      &::before {
+        transform: translate(-50%, -50%);
+      }
+    }
+  }
+}
+
+.settings-button {
+  cursor: pointer;
+  position: relative;
+  width: 2rem;
+  height: 100%;
+  border: none;
+  background-color: initial;
+
+  .dot {
+    display: block;
+    width: 0.4rem;
+    height: 0.4rem;
+    border-radius: 50%;
+    background-color: var(--tertiary-color);
+    margin: 0.2rem auto;
+  }
+}
