@@ -47,6 +47,23 @@ export default class ContactList implements IContactsList {
 
   public reverse(): void {}
 
+  public editContact(
+    data: Partial<IContact>,
+    { key, index }: { key: string; index: number }
+  ): boolean {
+    try {
+      const contact = this.lists[key].at(index);
+
+      if (!contact) throw new Error('Contact not find');
+      Object.assign(contact.value, data);
+
+      return true;
+    } catch (err) {
+      console.error(err);
+      return false;
+    }
+  }
+
   public createContact(contact: IContact): void {
     const [key] = this.normalize(contact.name);
     contact.name = contact.name || 'Sem nome';
