@@ -1,3 +1,4 @@
+import StringUtil from '../../utils/StringUtil';
 import LinkedList from '../LinkedList';
 import { ILinkedList, IListNode } from '../LinkedList/types';
 import {
@@ -27,7 +28,11 @@ export default class ContactList implements IContactsList {
   private lists: Record<string, LinkedList<IContact>> = {};
   private favorites: LinkedList<IContact> = new LinkedList();
 
-  constructor(contactProperty = 'name', sortMethod = 'crescent') {
+  constructor(
+    private stringUtil: StringUtil,
+    contactProperty = 'name',
+    sortMethod = 'crescent'
+  ) {
     this.contactProperty = contactProperty;
     this.sortMethod = sortMethod as 'crescent';
   }
@@ -36,12 +41,10 @@ export default class ContactList implements IContactsList {
     cb: (contact: IContact, letterKey: string, index: number) => any,
     startByLetterKey: string = ''
   ) {
-    const alphabetKeys = ALPHABET_KEYS.replace(
-      this.normalize(startByLetterKey),
-      ''
-    );
+    const startKey = this.stringUtil.normalize(startByLetterKey);
+    const alphabetKeys = ALPHABET_KEYS.replace(startKey, '');
 
-    const keys = startByLetterKey + alphabetKeys + ContactList.especialKey;
+    const keys = startKey + alphabetKeys + ContactList.especialKey;
 
     for (const letterKey of keys) {
       let index = 0;
@@ -53,20 +56,6 @@ export default class ContactList implements IContactsList {
         }
       }
     }
-  }
-
-  private normalize(content: string): string {
-    return content
-      .normalize('NFD')
-      .replace(/[^a-zA-Z]/g, '')
-      .toLowerCase();
-  }
-
-  private matchStrings(name: string, query: string): boolean {
-    const normalizedName = this.normalize(name);
-    const normalizedQuery = this.normalize(query);
-
-    return !!normalizedName.match(`${normalizedQuery}.*`);
   }
 
   private addList(key: string): void {
@@ -109,7 +98,7 @@ export default class ContactList implements IContactsList {
   }
 
   public createContact(contact: IContact): void {
-    const [key] = this.normalize(contact.name);
+    const [key] = this.stringUtil.normalize(contact.name);
     contact.name = contact.name || 'Sem nome';
 
     const isAlphabeticLetter = ALPHABET_KEYS.includes(key);
