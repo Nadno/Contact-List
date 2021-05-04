@@ -1,5 +1,5 @@
 import LinkedList from '../LinkedList';
-import { IListNode } from '../LinkedList/types';
+import { ILinkedList, IListNode } from '../LinkedList/types';
 import {
   ContactAndPosition,
   ContactPosition,
@@ -78,18 +78,26 @@ export default class ContactList implements IContactsList {
 
   public editContact(
     data: Partial<IContact>,
-    { key, index }: { key: string; index: number }
+    { letterKey, index }: ContactPosition
   ): boolean {
+    let result = false;
+
     try {
-      const contact = this.lists[key].at(index);
+      const list = this.lists[letterKey];
+      const contact = list.at(index);
 
       if (!contact) throw new Error('Contact not find');
-      Object.assign(contact.value, data);
+      const newContact = Object.assign(contact.value, data);
 
-      return true;
+      const deletedContact = list.remove(contact);
+      if (!deletedContact) return result;
+
+      this.createContact(newContact);
+      result = true;
     } catch (err) {
       console.error(err);
-      return false;
+    } finally {
+      return result;
     }
   }
 
