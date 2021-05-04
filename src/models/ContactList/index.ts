@@ -62,6 +62,13 @@ export default class ContactList implements IContactsList {
       .toLowerCase();
   }
 
+  private matchStrings(name: string, query: string): boolean {
+    const normalizedName = this.normalize(name);
+    const normalizedQuery = this.normalize(query);
+
+    return !!normalizedName.match(`${normalizedQuery}.*`);
+  }
+
   private addList(key: string): void {
     if (key.length !== 1)
       throw new Error('The key string exceeded the allowed length');
