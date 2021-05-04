@@ -6,13 +6,32 @@ interface SettingsItem {
   label: string;
 }
 
-export default class Setting extends Component {
-  settingsItems: SettingsItem[];
+export default class Settings {
+  private $settings: HTMLElement;
+  private $settingsLinks: HTMLAnchorElement[];
+  private $settingPosition: HTMLElement | null = null;
 
   constructor(items: SettingsItem[]) {
-    super();
-    this.settingsItems = items;
-    this.createItem = this.createItem.bind(this);
+    const addItemsLinks = ({ href, label }: SettingsItem) =>
+      Link({ href, content: label });
+
+    this.$settingsLinks = items.map(addItemsLinks);
+
+    this.$settings = Component.createElement('div', '', {
+      class: 'settings',
+    });
+
+    const $settingsItems = this.$settingsLinks.map(link =>
+      Component.createElement('li', [link])
+    );
+
+    const $settings = Component.createElement('ul', $settingsItems, {
+      class: 'settings-list',
+    });
+
+    this.$settings.appendChild($settings);
+
+    this.handleClick = this.handleClick.bind(this);
   }
 
   public static SettingButton(): HTMLElement {
@@ -22,8 +41,8 @@ export default class Setting extends Component {
 
     const $btn = Component.createElement('button', $dots, {
       class: 'settings-button',
-      'role': 'switch',
-      'aria-label': 'exibir opções de contato'
+      role: 'switch',
+      'aria-label': 'exibir opções de contato',
     });
 
     const $settingContainer = Component.createElement('div', [$btn], {
@@ -33,22 +52,87 @@ export default class Setting extends Component {
     return $settingContainer;
   }
 
-  private createItem({ href, label }: SettingsItem): HTMLElement {
-    const $item = Link({ href, content: label });
-    return Component.createElement('li', [$item]);
+  private setLinksParams(params: string): void {
+    this.$settingsLinks.forEach(link => (link.href += params));
   }
 
-  render() {
-    const $settingItems = this.settingsItems.map(this.createItem);
-
-    const $settings = Component.createElement('ul', $settingItems, {
-      class: 'settings-list',
+  private unsetLinksParams(paramSplitter: string): void {
+    this.$settingsLinks.forEach(link => {
+      const [href] = link.href.split(paramSplitter);
+      link.href = href;
     });
+  }
 
-    const $bg = Component.createElement('div', [$settings], {
-      class: 'settings',
-    });
+  private setButtonAriaChecked(bool: string) {
+    if (this.$settingPosition) {
+      const $button = this.$settingPosition.querySelector('.settings-button');
+      if ($button) $button.setAttribute('aria-checked', bool);
+    }
+  }
 
-    return $bg;
+  private moveSettingsTo(to: HTMLElement | null) {
+    if (this.$settingPosition) {
+      this.setButtonAriaChecked('false');
+      this.$settingPosition.classList.remove('on');
+      this.unsetLinksParams('?');
+    }
+
+    this.$settingPosition = to;
+    if (to) {
+      to.appendChild(this.$settings);
+
+      const $contact: any = this.$settings.closest('.contact');
+      if ($contact) {
+        const { id } = $contact.dataset;
+        this.setLinksParams(`?id=${id}`);
+      }
+    }
+  }
+
+  private turnSettingsOff() {
+    this.$settings.setAttribute('aria-hidden', 'true');
+    this.moveSettingsTo(null);
+
+    const removeSettingsElement = () => {
+      this.$settings.remove();
+      this.$settings.removeEventListener(
+        'transitionend',
+        removeSettingsElement
+      );
+    };
+
+    this.$settings.addEventListener('transitionend', removeSettingsElement);
+  }
+
+  private turnSettingsOn() {
+    if (this.$settingPosition) {
+      this.$settings.setAttribute('aria-hidden', 'false');
+      this.setButtonAriaChecked('true');
+
+      const turnSettingsPositionOn = () =>
+        (this.$settingPosition as HTMLElement).classList.add('on');
+
+      setTimeout(turnSettingsPositionOn, 100);
+    }
+  }
+
+  public handleClick(e: Event) {
+    let $settingsButton = e.target as HTMLElement;
+    const parent = $settingsButton.parentNode as HTMLElement;
+
+    if ($settingsButton.matches('.dot')) {
+      $settingsButton = parent;
+    }
+
+    if ($settingsButton.matches('.settings-button')) {
+      e.stopPropagation();
+      const $settingsContainer = $settingsButton.parentNode as HTMLElement;
+
+      const isCurrentSettingsOn = $settingsContainer.matches('.on');
+      if (isCurrentSettingsOn) return this.turnSettingsOff();
+
+      this.moveSettingsTo($settingsContainer);
+      this.turnSettingsOn();
+    }
   }
 }
