@@ -1,6 +1,12 @@
 import LinkedList from '../LinkedList';
 import { IListNode } from '../LinkedList/types';
-import { ContactPositions, IContact, IContactsList } from './types';
+import {
+  ContactAndPosition,
+  ContactPosition,
+  ContactPositions,
+  IContact,
+  IContactsList,
+} from './types';
 
 const ALPHABET_KEYS = 'abcdefghijklmnopqrsuvwxyz';
 
@@ -26,15 +32,23 @@ export default class ContactList implements IContactsList {
     this.sortMethod = sortMethod as 'crescent';
   }
 
-  public *[Symbol.iterator]() {
-    const keys = ALPHABET_KEYS + ContactList.especialKey;
+  public forEach(
+    cb: (contact: IContact, letterKey: string, index: number) => any,
+    startByLetterKey: string = ''
+  ) {
+    const alphabetKeys = ALPHABET_KEYS.replace(
+      this.normalize(startByLetterKey),
+      ''
+    );
 
-    for (const letter of keys) {
+    const keys = startByLetterKey + alphabetKeys + ContactList.especialKey;
+
+    for (const letterKey of keys) {
       let index = 0;
 
-      if (letter in this.lists) {
-        for (const node of this.lists[letter]) {
-          yield { contact: node, index, letter };
+      if (letterKey in this.lists) {
+        for (const contact of this.lists[letterKey]) {
+          cb(contact, letterKey, index);
           index++;
         }
       }
