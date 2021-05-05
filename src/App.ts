@@ -1,6 +1,7 @@
 import emitter from './controllers/Observer';
 import ContactList from './models/ContactList';
 import Router from './controllers/Router';
+import Render from './views/Render';
 
 import Home from './views/routes/Home/Home';
 import EditContact from './views/routes/Edit';
@@ -14,8 +15,6 @@ import {
   IContactsList,
 } from './models/ContactList/types';
 import { IObserver } from './controllers/Observer/types';
-import Render from './views/Render';
-import NotFound from './views/routes/404';
 
 export interface AppContext {
   router: Router;
@@ -45,23 +44,32 @@ export default class App {
 
   public start(): void {
     this.setRoutes();
-    this.subscribeEvents();
-    this.router.renderPath();
+    this.subscribeContactListEvents();
 
+    this.router.renderPath();
     window.onpopstate = () => this.router.goTo(location.pathname);
   }
 
   private setRoutes(): void {
-    this.router.path('/', Home);
-    this.router.path('/create', CreateContact);
+    this.router.path('/', ctx => new Home(ctx).render());
+    this.router.path('/edit', ctx => new EditContact(ctx).render());
+    this.router.path('/create', ctx => new CreateContact(ctx).render());
   }
 
-  private subscribeEvents() {
+  private subscribeContactListEvents() {
+    const { emitter, contacts } = this;
+
+    const forEachContact = (cb: any) => contacts.forEach(cb);
+    emitter.on('forEachContact', forEachContact);
+
     const createContact = (contact: IContact) => {
       contact.createdAt = new Date().toLocaleDateString('pt-BR');
-      this.contacts.createContact(contact);
+      contacts.createContact(contact);
     };
+    emitter.on('createContact', createContact);
 
-    this.emitter.on('create-contact', createContact);
+    const editContact = ({ contact, letterKey, index }: ContactAndPosition) =>
+      contacts.editContact(contact, { letterKey, index });
+    emitter.on('editContact', editContact);
   }
 }
