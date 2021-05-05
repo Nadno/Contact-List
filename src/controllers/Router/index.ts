@@ -31,37 +31,21 @@ export default class Router implements IRouter {
   }
 
   public goTo(href: string): void {
-    if (href === location.href) return;
-    const [url, params] = href.split('?');
+    if (href === this.location.href) return;
 
-    history.pushState(null, '', url);
+    history.pushState(null, '', href);
     this.renderPath();
   }
 
-  public path(path: string, cb: Function): void {
-    this.routes.push({ path, view: cb });
+  public path(path: string, view: (ctx: AppContext) => HTMLElement[]): void {
+    this.routes.push({ path, view });
   }
 
   public renderPath(): void {
     const getCurrentPath = (acc: {}, route: Route) =>
-      route.path === location.pathname ? ((acc = route), acc) : acc;
+      route.path === this.location.pathname ? ((acc = route), acc) : acc;
 
     const route: Partial<Route> = this.routes.reduce(getCurrentPath, {});
-    const { rootElement } = this;
-
-    rootElement.innerHTML = '';
-
-    const hasViewPage = 'view' in route;
-    if (hasViewPage) {
-      rootElement.insertAdjacentElement(
-        'beforeend',
-        new route.view(this.context).render()
-      );
-
-      return;
-    }
-
-    const $PageNotFound = new NotFound().render();
-    rootElement.insertAdjacentElement('beforeend', $PageNotFound);
+    this.emitter.emit('renderRoute', route.view);
   }
 }
