@@ -1,4 +1,4 @@
-export default abstract class Component {
+export default abstract class Component<RenderReturn = HTMLElement> {
   public static createElement<K extends keyof HTMLElementTagNameMap>(
     name: K,
     content: string | Array<HTMLElement> = '',
@@ -24,5 +24,5 @@ export default abstract class Component {
     return $el;
   }
 
-  public abstract render(): HTMLElement;
+  public abstract render(): RenderReturn;
 }
