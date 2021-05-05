@@ -1,23 +1,36 @@
-import emitter, { Observer } from './controllers/Observer';
+import emitter from './controllers/Observer';
 import ContactList from './models/ContactList';
 import Router from './controllers/Router';
 
-import CreateContact from './views/routes/Create';
 import Home from './views/routes/Home/Home';
+import EditContact from './views/routes/Edit';
+import CreateContact from './views/routes/Create';
 
-import { IContact } from './models/ContactList/types';
+import StringUtil from './utils/StringUtil';
+
+import {
+  ContactAndPosition,
+  IContact,
+  IContactsList,
+} from './models/ContactList/types';
+import { IObserver } from './controllers/Observer/types';
+import Render from './views/Render';
+import NotFound from './views/routes/404';
 
 export interface AppContext {
-  emitter: Observer;
-  contacts: ContactList;
+  router: Router;
+  emitter: IObserver;
 }
 
 export default class App {
   constructor(
-    private emitter: Observer,
-    private contacts: ContactList,
-    private router: Router
-  ) {}
+    private emitter: IObserver,
+    private contacts: IContactsList,
+    private router: Router,
+    private render: Render
+  ) {
+    this.emitter.on('renderRoute', this.render.renderRoute);
+  }
 
   public static createApp(): App {
     const $app = document.getElementById('app') || document.body;
