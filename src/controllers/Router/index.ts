@@ -1,16 +1,12 @@
-import NotFound from '../../views/routes/404';
-
-import { IRouter, Route, Routes } from './types';
 import { AppContext } from '../../App';
+import { IRouter, Route } from './types';
+import { IObserver } from '../Observer/types';
 
 export default class Router implements IRouter {
-  private routes: Routes = [];
+  private routes: Array<Route> = [];
 
-  private context: AppContext;
-
-  constructor(private rootElement: HTMLElement, ctx: AppContext) {
-    this.context = ctx;
-    this.rootElement.addEventListener('click', this.handleLinkClick.bind(this));
+  constructor(private location: Location, private emitter: IObserver) {
+    this.handleLinkClick = this.handleLinkClick.bind(this);
   }
 
   public handleLinkClick(e: Event) {
@@ -20,6 +16,18 @@ export default class Router implements IRouter {
       e.preventDefault();
       this.goTo(target.href);
     }
+  }
+
+  public getParams(): Record<string, string> {
+    const getParam = (acc: Record<string, string>, param: string) => {
+      const [key, value] = param.split('=');
+      return (acc[key] = value), acc;
+    };
+
+    const [, params] = this.location.href.split('?');
+    if (!params) return {};
+
+    return params.split('&').reduce(getParam, {});
   }
 
   public goTo(href: string): void {
