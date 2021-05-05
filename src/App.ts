@@ -34,10 +34,13 @@ export default class App {
 
   public static createApp(): App {
     const $app = document.getElementById('app') || document.body;
-    const contacts = new ContactList();
+    const contacts = new ContactList(new StringUtil());
 
-    const router = new Router($app, { contacts, emitter });
-    return new App(emitter, contacts, router);
+    const router = new Router(location, emitter);
+    $app.addEventListener('click', router.handleLinkClick);
+
+    const render = Render.createRender($app, { router, emitter });
+    return new App(emitter, contacts, router, render);
   }
 
   public start(): void {
