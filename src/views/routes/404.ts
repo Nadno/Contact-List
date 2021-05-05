@@ -8,15 +8,17 @@ export default class NotFound extends PageComponent {
     this.setTitle('404');
   }
 
-  public render(): HTMLElement {
+  public render(): HTMLElement[] {
     const $title = PageComponent.createElement('h2', 'Página não encontrada!');
     const $content = PageComponent.createElement(
       'p',
       'Por favor, retorne a página inicial para encontrar o que procura.'
     );
 
-    return PageComponent.createElement('div', [$title, $content], {
-      class: 'not-found',
-    });
+    return [
+      PageComponent.createElement('div', [$title, $content], {
+        class: 'not-found',
+      }),
+    ];
   }
 }
