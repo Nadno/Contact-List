@@ -12,7 +12,7 @@ export default class Home extends PageComponent {
 
   constructor(ctx: AppContext) {
     super();
-    this.setTitle('Contacts');
+    this.setTitle('Lista de contatos');
 
     const $header = new Header().render();
     const $contactList = new Contacts(ctx).render();
@@ -20,7 +20,7 @@ export default class Home extends PageComponent {
     this.$elements = [$header, $contactList];
   }
 
-  public render(): HTMLElement {
-    return Component.createElement('div', this.$elements);
+  public render(): HTMLElement[] {
+    return this.$elements;
   }
 }
