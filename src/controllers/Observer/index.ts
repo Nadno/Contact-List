@@ -1,8 +1,10 @@
 import LinkedList from '../../models/LinkedList';
-import { IObserver } from './types';
 
-export class Observer implements IObserver {
-  events: Record<string, LinkedList<Function>> = {};
+import { IObserver } from './types';
+import { ILinkedList } from '../../models/LinkedList/types';
+
+class Observer implements IObserver {
+  events: Record<string, ILinkedList<Function>> = {};
 
   public on(event: string, cb: (...args: any) => void): void {
     if (event in this.events) {
