@@ -2,34 +2,24 @@ import Contact from '.';
 import Component from '../component';
 import Settings from './Settings';
 
-import { AppContext } from '../../App';
-import { IObserver } from '../../controllers/Observer/types';
-import { IContact } from '../../models/ContactList/types';
+import { ContactAndPosition, IContact } from '../../models/ContactList/types';
 
 export default class Contacts extends Component {
-  private emitter: IObserver;
   private settings: Settings;
+  private $list: HTMLElement;
 
-  private $container: HTMLElement;
-
-  constructor({ emitter }: AppContext) {
+  constructor(attrs: Record<string, string>) {
     super();
 
-    this.emitter = emitter;
     this.settings = new Settings([
       { href: '/edit', label: 'Editar' },
       { href: '/remove', label: 'Apagar' },
     ]);
 
-    this.$container = Component.createElement('ol', [], {
-      class: 'contacts',
-      type: 'A',
-    });
-
-    this.appendContactList = this.appendContactList.bind(this);
+    this.$list = Component.createElement('ol', [], attrs);
   }
 
-  private createContactList(letter: string) {
+  public addSubContactList(letter: string): HTMLOListElement {
     const $list = Component.createElement('ol', '', {
       type: 'a',
     });
@@ -38,43 +28,33 @@ export default class Contacts extends Component {
       class: 'contact-list__label',
     });
 
-    const $contactsListItem = Component.createElement(
-      'li',
-      [$listLabel, $list],
-      {
+    this.$list.appendChild(
+      Component.createElement('li', [$listLabel, $list], {
         class: 'contact-list',
-      }
+      })
     );
-
-    this.$container.insertAdjacentElement('beforeend', $contactsListItem);
 
     return $list;
   }
 
-  private appendContactList() {
-    let currentLetter: string;
-    let $contactsList: HTMLElement;
+  public addContact(
+    { contact, letterKey, index }: ContactAndPosition,
+    subList?: HTMLOListElement
+  ): void {
+    const $list = subList ? subList : this.$list;
 
-    this.emitter.emit(
-      'forEachContact',
-      (contact: IContact, letterKey: string, index: number) => {
-        if (letterKey !== currentLetter) {
-          currentLetter = letterKey;
-          $contactsList = this.createContactList(letterKey);
-        }
+    const contactId = `${letterKey}-${index}`;
+    const $contact = new Contact(contact.name, contactId).render();
 
-        const contactId = `${letterKey}-${index}`;
-        const $contact = new Contact(contact.name, contactId);
+    $list.appendChild($contact);
+  }
 
-        $contactsList.appendChild($contact.render());
-      }
-    );
+  public clearList(): void {
+    this.$list.innerHTML = '';
   }
 
   public render(): HTMLElement {
-    setTimeout(this.appendContactList, 200);
-
-    this.$container.addEventListener('click', this.settings.handleClick);
-    return this.$container;
+    this.$list.addEventListener('click', this.settings.handleClick);
+    return this.$list;
   }
 }
