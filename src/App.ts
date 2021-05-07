@@ -15,6 +15,7 @@ import {
   IContactsList,
 } from './models/ContactList/types';
 import { IObserver } from './controllers/Observer/types';
+import { ILinkedList } from './models/LinkedList/types';
 
 export interface AppContext {
   router: Router;
@@ -59,8 +60,10 @@ export default class App {
   private subscribeContactListEvents() {
     const { emitter, contacts } = this;
 
-    const forEachContact = (cb: any) => contacts.forEach(cb);
-    emitter.on('forEachContact', forEachContact);
+    const forEachContactList = (
+      cb: (contacts: ILinkedList<IContact>, letterKey: string) => any
+    ) => contacts.forEachList(cb);
+    emitter.on('forEachContactList', forEachContactList);
 
     const createContact = (contact: IContact) => {
       contact.createdAt = new Date().toLocaleDateString('pt-BR');
