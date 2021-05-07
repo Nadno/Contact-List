@@ -2,8 +2,8 @@ import Link from '../../controllers/Link';
 import Component from '../component';
 import Settings from './Settings';
 
-export default class Contact extends Component {
-  $contact: HTMLElement;
+export default class Contact extends Component<HTMLLIElement> {
+  $contact: HTMLLIElement;
 
   constructor(name: string, id: string) {
     super();
@@ -22,7 +22,7 @@ export default class Contact extends Component {
     });
   }
 
-  public render(): HTMLElement {
+  public render(): HTMLLIElement {
     return this.$contact;
   }
 }
