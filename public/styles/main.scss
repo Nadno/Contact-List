@@ -20,12 +20,17 @@ body {
   width: 100%;
   max-width: 100vw;
   background-color: var(--bg-color);
+  overflow-y: hidden;
+
+  --header-height: 5rem;
 }
 
 #app {
+  position: relative;
   width: 100%;
   height: auto;
   min-height: 100vh;
+  margin-top: var(--header-height);
 }
 
 a {

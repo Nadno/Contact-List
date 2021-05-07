@@ -1,11 +1,11 @@
 .contacts {
+  height: calc(100vh - var(--header-height));
   list-style: none;
-  overflow: hidden;
+  overflow-y: scroll;
+  padding-bottom: 4rem;
 }
 
 .contact-list {
-  position: relative;
-
   &__label {
     display: block;
     width: 100%;
