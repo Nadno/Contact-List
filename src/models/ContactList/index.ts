@@ -9,7 +9,7 @@ import {
   IContactsList,
 } from './types';
 
-const ALPHABET_KEYS = 'abcdefghijklmnopqrsuvwxyz';
+const ALPHABET_KEYS = 'abcdefghijklmnopqtrsuvwxyz';
 
 export default class ContactList implements IContactsList {
   public static especialKey = '#';
@@ -37,8 +37,8 @@ export default class ContactList implements IContactsList {
     this.sortMethod = sortMethod as 'crescent';
   }
 
-  public forEach(
-    cb: (contact: IContact, letterKey: string, index: number) => any,
+  public forEachList(
+    cb: (contacts: ILinkedList<IContact>, letterKey: string) => any,
     startByLetterKey: string = ''
   ) {
     const startKey = this.stringUtil.normalize(startByLetterKey);
@@ -47,14 +47,7 @@ export default class ContactList implements IContactsList {
     const keys = startKey + alphabetKeys + ContactList.especialKey;
 
     for (const letterKey of keys) {
-      let index = 0;
-
-      if (letterKey in this.lists) {
-        for (const contact of this.lists[letterKey]) {
-          cb(contact, letterKey, index);
-          index++;
-        }
-      }
+      if (letterKey in this.lists) cb(this.lists[letterKey], letterKey);
     }
   }
 
