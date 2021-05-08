@@ -1,12 +1,28 @@
 import Link from '../controllers/Link';
 import Component from './component';
 
+import { AppContext } from '../App';
+import { IObserver } from '../controllers/Observer/types';
+import { ILinkedList } from '../models/LinkedList/types';
+import { ContactAndPosition } from '../models/ContactList/types';
+
+import Contacts from './Contact/Contacts';
+
 export default class Header extends Component {
   private $header: HTMLElement;
-  constructor() {
+
+  private emitter: IObserver;
+  private scheduledSearch: NodeJS.Timeout | null = null;
+
+  public contactsResult: Contacts;
+
+  constructor({ emitter }: AppContext) {
     super();
 
-    const $search = this.createSearchBar();
+    this.emitter = emitter;
+    this.handleFindContact = this.handleFindContact.bind(this);
+
+    const $searchContact = this.createSearchBar();
 
     const $addContact = Link({
       title: 'Criar contato',
@@ -15,8 +31,17 @@ export default class Header extends Component {
       class: 'header__add-contact',
     });
 
-    this.$header = Component.createElement('header', [$search, $addContact], {
-      class: 'header',
+    this.$header = Component.createElement(
+      'header',
+      [$searchContact, $addContact],
+      {
+        class: 'header',
+      }
+    );
+
+    this.contactsResult = new Contacts({
+      class: 'contacts search-result',
+      type: 'A',
     });
   }
 
