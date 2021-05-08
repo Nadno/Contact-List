@@ -74,6 +74,27 @@ export default class ContactList implements IContactsList {
 
   public reverse(): void {}
 
+  public findContact(name: string): ILinkedList<ContactAndPosition> {
+    const result = new LinkedList<ContactAndPosition>();
+    const { likeMatch, normalize } = this.stringUtil;
+
+    const normalizedName = normalize(name);
+    const [startByLetterKey] = normalizedName;
+
+    const search = (contacts: ILinkedList<IContact>, letterKey: string) => {
+      const searchInList = (contact: IContact, index: number) => {
+        if (likeMatch(normalize(contact.name), normalizedName)) {
+          result.push({ contact, letterKey, index });
+        }
+      };
+      contacts.forEach(searchInList);
+    };
+
+    this.forEachList(search, startByLetterKey);
+
+    return result;
+  }
+
   public editContact(
     data: Partial<IContact>,
     { letterKey, index }: ContactPosition
