@@ -26,8 +26,9 @@ export default class Home extends PageComponent {
 
     const $header = header.render();
     const $contactList = this.contactList.render();
+    const $resultList = header.contactsResult.render();
 
-    this.$elements = [$header, $contactList];
+    this.$elements = [$header, $contactList, $resultList];
   }
 
   private renderContacts(
@@ -42,8 +43,26 @@ export default class Home extends PageComponent {
     contacts.forEach(renderContact);
   }
 
+  private toggleResult(turn: 'on' | 'off') {
+    const [$header, $contactList, $resultList] = this.$elements;
+    const $searchBar = $header.querySelector('.search-bar');
+
+    if ($searchBar) {
+      const actions = { on: 'add', off: 'remove' };
+      const toggle = actions[turn] as 'add' | 'remove';
+
+      $searchBar.classList[toggle]('on');
+      $resultList.classList[toggle]('on');
+      $contactList.classList[toggle]('--hidden');
+
+      if (turn === 'off') $resultList.innerHTML = '';
+    }
+  }
+
   public render(): HTMLElement[] {
     const { emitter } = this.ctx;
+    
+    emitter.on('toggleResult', this.toggleResult.bind(this));
     emitter.emit('forEachContactList', this.renderContacts.bind(this));
 
     return this.$elements;
