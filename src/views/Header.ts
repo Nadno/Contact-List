@@ -54,14 +54,63 @@ export default class Header extends Component {
       placeholder: 'Encontrar contato',
     });
 
-    const $submit = Component.createElement('button', 'buscar', {
-      class: 'search__button',
-      type: 'submit',
+    const $closeSearch = Component.createElement('button', 'X', {
+      class: 'search__close',
     });
 
-    return Component.createElement('form', [$search, $submit], {
-      class: 'search-bar',
-    });
+    const $searchBar = Component.createElement(
+      'form',
+      [$closeSearch, $search],
+      {
+        class: 'search-bar',
+      }
+    );
+
+    $search.addEventListener('input', this.handleFindContact);
+
+    const turnResultOn = () => this.emitter.emit('toggleResult', 'on');
+    $search.addEventListener('focus', turnResultOn);
+
+    const turnResultOff = (e: Event) => {
+      e.preventDefault();
+      $search.value = '';
+      this.emitter.emit('toggleResult', 'off');
+    };
+    $closeSearch.addEventListener('click', turnResultOff);
+
+    return $searchBar;
+  }
+
+  private scheduleSearch(query: string): void {
+    if (this.scheduledSearch) clearTimeout(this.scheduledSearch);
+
+    const handleResult = (results: ILinkedList<ContactAndPosition>) => {
+      const { contactsResult } = this;
+      contactsResult.clearList();
+
+      const renderContact = (result: ContactAndPosition) =>
+        contactsResult.addContact(result);
+
+      results.forEach(renderContact);
+    };
+
+    const halfSecond = 500;
+    const search = () => {
+      this.emitter.emit('findContact', {
+        handleResult,
+        query,
+      });
+      this.scheduledSearch = null;
+    };
+
+    this.scheduledSearch = setTimeout(search, halfSecond);
+  }
+
+  private handleFindContact(e: Event): void {
+    const { value } = e.target as HTMLInputElement;
+
+    if (!value) return this.contactsResult.clearList();
+    this.scheduleSearch(value);
   }
 
   public render(): HTMLElement {
