@@ -2,7 +2,7 @@ import Link from '../controllers/Link';
 import Component from './component';
 
 import { AppContext } from '../App';
-import { IObserver } from '../controllers/Observer/types';
+import { IEmitter } from '../controllers/Emitter/types';
 import { ILinkedList } from '../models/LinkedList/types';
 import { ContactAndPosition } from '../models/ContactList/types';
 
@@ -11,7 +11,7 @@ import Contacts from './Contact/Contacts';
 export default class Header extends Component {
   private $header: HTMLElement;
 
-  private emitter: IObserver;
+  private emitter: IEmitter;
   private scheduledSearch: NodeJS.Timeout | null = null;
 
   public contactsResult: Contacts;
