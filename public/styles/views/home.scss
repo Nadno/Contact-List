@@ -48,4 +48,18 @@
 
   top: 0;
   right: 0;
+
+  &:empty::after {
+    content: 'Resultados';
+
+    position: absolute;
+
+    color: var(--tertiary-color);
+    font-size: var(--font-16);
+    opacity: 0.7;
+
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+  }
 }
