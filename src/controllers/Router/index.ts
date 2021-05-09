@@ -19,15 +19,19 @@ export default class Router implements IRouter {
   }
 
   public getParams(): Record<string, string> {
-    const getParam = (acc: Record<string, string>, param: string) => {
-      const [key, value] = param.split('=');
-      return (acc[key] = value), acc;
-    };
+    let result: Record<string, string> = {};
 
     const [, params] = this.location.href.split('?');
-    if (!params) return {};
+    if (!params) return result;
+  
+    const getParam = (value: string, key: string) => {
+      result[key] = value;
+    };
 
-    return params.split('&').reduce(getParam, {});
+    const searchParams = new URLSearchParams(params);
+    searchParams.forEach(getParam);
+
+    return result;
   }
 
   public goTo(href: string): void {
