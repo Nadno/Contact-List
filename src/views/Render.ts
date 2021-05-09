@@ -1,19 +1,15 @@
-import { AppContext } from '../App';
 import NotFound from './routes/404';
 
 export default class Render {
   constructor(
     private routeFallback: () => HTMLElement[],
     private rootElement: HTMLElement,
-    private ctx: AppContext
+    private ctx: any
   ) {
     this.renderRoute = this.renderRoute.bind(this);
   }
 
-  public static createRender(
-    rootElement: HTMLElement,
-    ctx: AppContext
-  ): Render {
+  public static createRender(rootElement: HTMLElement, ctx: any): Render {
     const routeFallback = () => new NotFound().render();
     return new Render(routeFallback, rootElement, ctx);
   }
@@ -24,7 +20,7 @@ export default class Render {
   }
 
   public renderRoute(
-    view: (ctx: AppContext) => HTMLElement[] = this.routeFallback
+    view: (ctx: any) => HTMLElement[] = this.routeFallback
   ): void {
     this.renderElements(view(this.ctx));
   }
