@@ -32,4 +32,8 @@
       background-color: var(--primary-color);
     }
   }
+
+  &.--hidden {
+    display: none;
+  }
 }
