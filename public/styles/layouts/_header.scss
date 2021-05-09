@@ -36,25 +36,31 @@
   font-size: var(--font-16);
 
   border: none;
-  border-bottom: 1px solid var(--primary-color);
+  border-left: 1px solid var(--primary-color);
+  border-right: 1px solid var(--primary-color);
+
+  &__close {
+    cursor: pointer;
+    width: 0;
+    border: none;
+
+    font-weight: bold;
+    color: var(--tertiary-color);
+    background-color: initial;
+    pointer-events: none;
+
+    will-change: width;
+    transition: width 150ms linear;
+  }
 
   &-bar {
     width: 95%;
     height: 100%;
     display: flex;
-    padding-left: 1rem;
-    border-right: 1px solid var(--primary-color);
-  }
 
-  &__button {
-    cursor: pointer;
-    height: 100%;
-    border: none;
-    background-color: initial;
-
-    padding: 0.5rem 1rem;
-
-    font-size: var(--font-16);
-    color: var(--secondary-color);
+    &.on .search__close {
+      width: 5rem;
+      pointer-events: initial;
+    }
   }
 }
