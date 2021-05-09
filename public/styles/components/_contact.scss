@@ -12,13 +12,24 @@
   border-bottom: 1px solid var(--primary-color);
 
   &__name {
-    width: 90%;
+    position: relative;
+    width: 85%;
     height: 100%;
 
     display: flex;
     align-items: center;
+    padding-left: 1rem;
 
     font-size: var(--font-16);
-    border-right: 1px solid var(--primary-color);
+
+    &::after {
+      content: '';
+
+      position: absolute;
+      height: 100%;
+      width: 1px;
+      right: -1.5rem;
+      background-color: var(--primary-color);
+    }
   }
 }
