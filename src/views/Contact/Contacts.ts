@@ -2,7 +2,7 @@ import Contact from '.';
 import Component from '../component';
 import Settings from './Settings';
 
-import { ContactAndPosition, IContact } from '../../models/ContactList/types';
+import { ContactAndPosition } from '../../models/ContactList/types';
 
 export default class Contacts extends Component {
   private settings: Settings;
@@ -44,8 +44,9 @@ export default class Contacts extends Component {
     const $list = subList ? subList : this.$list;
 
     const contactId = `${letterKey}-${index}`;
-    const $contact = new Contact(contact.name, contactId).render();
-
+    const contactName = contact.name || 'Sem nome';
+    
+    const $contact = new Contact(contactName, contactId).render();
     $list.appendChild($contact);
   }
 
