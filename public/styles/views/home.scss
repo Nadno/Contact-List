@@ -63,3 +63,8 @@
     transform: translate(-50%, -50%);
   }
 }
+
+.contacts.--hidden {
+  visibility: hidden;
+  height: 0;
+}
