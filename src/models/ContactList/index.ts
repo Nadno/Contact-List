@@ -66,7 +66,6 @@ export default class ContactList implements IContactsList {
   ): ILinkedList<IContact> | undefined {
     const normalizedKey = this.stringUtil.normalize(key);
     if (normalizedKey.length !== 1) return undefined;
-
     return this.lists[key];
   }
 
@@ -74,7 +73,7 @@ export default class ContactList implements IContactsList {
 
   public reverse(): void {}
 
-  public findContact(name: string): ILinkedList<ContactAndPosition> {
+  public findAll(name: string): ILinkedList<ContactAndPosition> {
     const result = new LinkedList<ContactAndPosition>();
     const { likeMatch, normalize } = this.stringUtil;
 
@@ -122,7 +121,6 @@ export default class ContactList implements IContactsList {
 
   public createContact(contact: IContact): void {
     const [key] = this.stringUtil.normalize(contact.name);
-    contact.name = contact.name || 'Sem nome';
 
     const isAlphabeticLetter = ALPHABET_KEYS.includes(key);
     if (isAlphabeticLetter && !(key in this.lists)) this.addList(key);
