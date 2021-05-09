@@ -1,9 +1,9 @@
 import LinkedList from '../../models/LinkedList';
 
-import { IObserver } from './types';
+import { IEmitter } from './types';
 import { ILinkedList } from '../../models/LinkedList/types';
 
-class Observer implements IObserver {
+class Emitter implements IEmitter {
   events: Record<string, ILinkedList<Function>> = {};
 
   public on(event: string, cb: (...args: any) => void): void {
@@ -22,4 +22,4 @@ class Observer implements IObserver {
   }
 }
 
-export default new Observer();
+export default Emitter;

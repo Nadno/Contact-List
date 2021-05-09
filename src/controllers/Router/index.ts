@@ -1,11 +1,11 @@
 import { AppContext } from '../../App';
 import { IRouter, Route } from './types';
-import { IObserver } from '../Observer/types';
+import { IEmitter } from '../Emitter/types';
 
 export default class Router implements IRouter {
   private routes: Array<Route> = [];
 
-  constructor(private location: Location, private emitter: IObserver) {
+  constructor(private location: Location, private emitter: IEmitter) {
     this.handleLinkClick = this.handleLinkClick.bind(this);
   }
 
