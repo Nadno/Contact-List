@@ -69,6 +69,16 @@ export default class ContactList implements IContactsList {
     return this.lists[key];
   }
 
+  public getContact(
+    key: string = '',
+    index: number
+  ): IListNode<IContact> | undefined {
+    const list = this.getList(key);
+    if (!list) return list;
+
+    return list.at(index);
+  }
+
   public sort(): void {}
 
   public reverse(): void {}
