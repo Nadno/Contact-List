@@ -61,10 +61,10 @@ export default class ContactList implements IContactsList {
     this.lists[ContactList.especialKey] = new LinkedList<IContact>();
   }
 
-  public getList(
-    key: string = ContactList.especialKey
-  ): ILinkedList<IContact> | undefined {
-    const normalizedKey = this.stringUtil.normalize(key);
+  public getList(key: string): ILinkedList<IContact> | undefined {
+    const normalizedKey =
+      this.stringUtil.normalize(key) || ContactList.especialKey;
+
     if (normalizedKey.length !== 1) return undefined;
     return this.lists[key];
   }
