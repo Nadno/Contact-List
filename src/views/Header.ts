@@ -1,7 +1,7 @@
 import Link from '../controllers/Link';
 import Component from './component';
 
-import { AppContext } from '../App';
+import { AppContext, AppState } from '../App';
 import { IEmitter } from '../controllers/Emitter/types';
 import { ILinkedList } from '../models/LinkedList/types';
 import { ContactAndPosition } from '../models/ContactList/types';
@@ -11,15 +11,12 @@ import Contacts from './Contact/Contacts';
 export default class Header extends Component {
   private $header: HTMLElement;
 
-  private emitter: IEmitter;
+  public contactsResult: Contacts;
   private scheduledSearch: NodeJS.Timeout | null = null;
 
-  public contactsResult: Contacts;
-
-  constructor({ emitter }: AppContext) {
+  constructor(private ctx: AppContext<AppState>) {
     super();
 
-    this.emitter = emitter;
     this.handleFindContact = this.handleFindContact.bind(this);
 
     const $searchContact = this.createSearchBar();
@@ -67,13 +64,14 @@ export default class Header extends Component {
 
     $search.addEventListener('input', this.handleFindContact);
 
-    const turnResultOn = () => this.emitter.emit('toggleResult', 'on');
+    const { emitter } = this.ctx;
+    const turnResultOn = () => emitter.emit('toggleResult', 'on');
     $search.addEventListener('focus', turnResultOn);
 
     const turnResultOff = (e: Event) => {
       e.preventDefault();
       $search.value = '';
-      this.emitter.emit('toggleResult', 'off');
+      emitter.emit('toggleResult', 'off');
     };
     $closeSearch.addEventListener('click', turnResultOff);
 
@@ -81,8 +79,6 @@ export default class Header extends Component {
   }
 
   private scheduleSearch(query: string): void {
-    if (this.scheduledSearch) clearTimeout(this.scheduledSearch);
-
     const handleResult = (results: ILinkedList<ContactAndPosition>) => {
       const { contactsResult } = this;
       contactsResult.clearList();
@@ -93,22 +89,23 @@ export default class Header extends Component {
       results.forEach(renderContact);
     };
 
-    const halfSecond = 500;
+    const { state } = this.ctx;
+
     const search = () => {
-      this.emitter.emit('findContact', {
-        handleResult,
-        query,
-      });
+      handleResult(state.contacts.findAll(query));
       this.scheduledSearch = null;
     };
 
+    const halfSecond = 500;
     this.scheduledSearch = setTimeout(search, halfSecond);
   }
 
   private handleFindContact(e: Event): void {
     const { value } = e.target as HTMLInputElement;
 
+    if (this.scheduledSearch) clearTimeout(this.scheduledSearch);
     if (!value) return this.contactsResult.clearList();
+
     this.scheduleSearch(value);
   }
 
