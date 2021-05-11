@@ -1,6 +1,6 @@
 import Link from '../../controllers/Link';
 import Component from '../component';
-import Settings from './Settings';
+import ContactOptions from '../ContactOptions/index';
 
 export default class Contact extends Component<HTMLLIElement> {
   $contact: HTMLLIElement;
@@ -11,13 +11,13 @@ export default class Contact extends Component<HTMLLIElement> {
     const $name = Link({
       content: name,
       href: `/contact?id=${id}`,
-      class: 'contact__name',
+      className: 'contact__name',
     });
 
-    const $edit = Settings.SettingButton();
+    const $edit = ContactOptions.OptionsButton();
 
     this.$contact = Component.createElement('li', [$name, $edit], {
-      class: 'contact',
+      className: 'contact',
       'data-id': id,
     });
   }

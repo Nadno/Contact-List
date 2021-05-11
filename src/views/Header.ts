@@ -23,24 +23,23 @@ export default class Header extends Component {
     this.handleFindContact = this.handleFindContact.bind(this);
 
     const $searchContact = this.createSearchBar();
-
     const $addContact = Link({
       title: 'Criar contato',
       href: '/create',
       content: '+',
-      class: 'header__add-contact',
+      className: 'header__add-contact',
     });
 
     this.$header = Component.createElement(
       'header',
       [$searchContact, $addContact],
       {
-        class: 'header',
+        className: 'header',
       }
     );
 
     this.contactsResult = new Contacts({
-      class: 'contacts search-result',
+      className: 'contacts search-result',
       type: 'A',
     });
   }
@@ -50,19 +49,19 @@ export default class Header extends Component {
       id: 'search',
       name: 'search',
       type: 'search',
-      class: 'search',
+      className: 'search',
       placeholder: 'Encontrar contato',
     });
 
     const $closeSearch = Component.createElement('button', 'X', {
-      class: 'search__close',
+      className: 'search__close',
     });
 
     const $searchBar = Component.createElement(
       'form',
       [$closeSearch, $search],
       {
-        class: 'search-bar',
+        className: 'search-bar',
       }
     );
 

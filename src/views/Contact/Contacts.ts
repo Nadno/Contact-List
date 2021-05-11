@@ -25,12 +25,12 @@ export default class Contacts extends Component {
     });
 
     const $listLabel = Component.createElement('span', letter.toUpperCase(), {
-      class: 'contact-list__label',
+      className: 'contact-list__label',
     });
 
     this.$list.appendChild(
       Component.createElement('li', [$listLabel, $list], {
-        class: 'contact-list',
+        className: 'contact-list',
       })
     );
 
@@ -45,7 +45,7 @@ export default class Contacts extends Component {
 
     const contactId = `${letterKey}-${index}`;
     const contactName = contact.name || 'Sem nome';
-    
+
     const $contact = new Contact(contactName, contactId).render();
     $list.appendChild($contact);
   }

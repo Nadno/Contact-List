@@ -17,7 +17,7 @@ export default class NotFound extends PageComponent {
 
     return [
       PageComponent.createElement('div', [$title, $content], {
-        class: 'not-found',
+        className: 'not-found',
       }),
     ];
   }

@@ -14,8 +14,14 @@ export default abstract class Component<RenderReturn = HTMLElement> {
       );
     }
 
+    
     if (!attrs) return $el;
-    const attrsAsArray = Object.entries(attrs);
+    const { className, ...rest } = attrs;
+
+    if (className) $el.className = className;
+    
+    if (!rest) return $el;
+    const attrsAsArray = Object.entries(rest);
 
     const setElementAttrs = ([key, value]: [string, string]) =>
       $el.setAttribute(key, value);
