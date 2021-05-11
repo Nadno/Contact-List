@@ -6,48 +6,59 @@ import Home from './views/routes/Home/Home';
 import EditContact from './views/routes/Contact/Edit';
 import CreateContact from './views/routes/Contact/Create';
 
+import ContactList from './models/ContactList';
+import StringUtil from './utils/StringUtil';
+
 import { IEmitter } from './controllers/Emitter/types';
 import { IContactsList } from './models/ContactList/types';
-import FactoryContactList from './models/ContactList/FactoryContactList';
 
-export interface AppContext {
+export interface AppContext<S = any> {
+  state: S;
   router: Router;
   emitter: IEmitter;
 }
 
-export default class App {
-  constructor(
-    private emitter: IEmitter,
-    private contacts: IContactsList,
-    private router: Router,
-    private render: Render
-  ) {
-    this.emitter.on('renderRoute', this.render.renderRoute);
+export interface AppState {
+  contacts: IContactsList;
+}
+
+export default class App<S = any> {
+  constructor(private ctx: AppContext<S>, private render: Render) {
+    ctx.emitter.on('renderRoute', render.renderRoute);
   }
 
   public static createApp(): App {
     const $app = document.getElementById('app') || document.body;
 
     const emitter = new Observer();
-    const contacts = FactoryContactList.createContactList(emitter);
+    const contacts = new ContactList(new StringUtil());
 
     const router = new Router(location, emitter);
     $app.addEventListener('click', router.handleLinkClick);
 
-    const render = Render.createRender($app, { router, emitter });
-    return new App(emitter, contacts, router, render);
+    const context = {
+      state: { contacts },
+      emitter,
+      router,
+    };
+
+    const render = Render.createRender($app, context);
+    return new App<AppState>(context, render);
   }
 
   public start(): void {
     this.setRoutes();
 
-    this.router.renderPath();
-    window.onpopstate = () => this.router.goTo(location.pathname);
+    const { router } = this.ctx;
+    router.renderPath();
+    window.onpopstate = () => router.goTo(location.pathname);
   }
 
   private setRoutes(): void {
-    this.router.path('/', ctx => new Home(ctx).render());
-    this.router.path('/edit', ctx => new EditContact(ctx).render());
-    this.router.path('/create', ctx => new CreateContact(ctx).render());
+    const { router } = this.ctx;
+
+    router.path('/', ctx => new Home(ctx).render());
+    router.path('/edit', ctx => new EditContact(ctx).render());
+    router.path('/create', ctx => new CreateContact(ctx).render());
   }
 }
