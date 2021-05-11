@@ -2,7 +2,7 @@ import PageComponent from '../PageComponent';
 import Contacts from '../../Contact/Contacts';
 import Header from '../../Header';
 
-import { AppContext } from '../../../App';
+import { AppContext, AppState } from '../../../App';
 
 import { ILinkedList } from '../../../models/LinkedList/types';
 import { IContact } from '../../../models/ContactList/types';
@@ -13,14 +13,14 @@ export default class Home extends PageComponent {
   $elements: HTMLElement[];
   contactList: Contacts;
 
-  constructor(private ctx: AppContext) {
+  constructor(private ctx: AppContext<AppState>) {
     super();
     this.setTitle('Lista de contatos');
 
     const header = new Header(ctx);
 
     this.contactList = new Contacts({
-      class: 'contacts',
+      className: 'contacts',
       type: 'A',
     });
 
@@ -60,10 +60,10 @@ export default class Home extends PageComponent {
   }
 
   public render(): HTMLElement[] {
-    const { emitter } = this.ctx;
-    
+    const { state, emitter } = this.ctx;
+
     emitter.on('toggleResult', this.toggleResult.bind(this));
-    emitter.emit('forEachContactList', this.renderContacts.bind(this));
+    state.contacts.forEachList(this.renderContacts.bind(this));
 
     return this.$elements;
   }
