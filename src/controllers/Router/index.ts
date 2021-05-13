@@ -1,6 +1,5 @@
-import PageComponent from '../../views/routes/PageComponent';
+import { PageConstructor } from '../../views/routes/PageComponent';
 
-import { AppContext } from '../../App';
 import { IRouter, Route } from './types';
 import { IEmitter } from '../Emitter/types';
 
@@ -47,7 +46,7 @@ export default class Router implements IRouter {
     history.back();
   }
 
-  public path(path: string, view: (ctx: AppContext) => PageComponent): void {
+  public path(path: string, view: () => Promise<PageConstructor>): void {
     this.routes.push({ path, view });
   }
 
