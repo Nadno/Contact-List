@@ -87,6 +87,13 @@ export default class Home extends PageComponent {
     }
   }
 
+  public unMount(): void {
+    const { emitter } = this.ctx;
+
+    emitter.remove('updateContactList', this.updateRemovedContacts);
+    emitter.remove('toggleResult', this.toggleResult);
+  }
+
   public render(): HTMLElement[] {
     const { state, emitter } = this.ctx;
 
