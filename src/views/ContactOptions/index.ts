@@ -48,16 +48,6 @@ export default class ContactOptions {
     return $settingContainer;
   }
 
-  private setLinksParams(params: string): void {
-    this.$settingsLinks.forEach(link => (link.href += params));
-  }
-
-  private unsetLinksParams(paramSplitter: string): void {
-    this.$settingsLinks.forEach(link => {
-      const [href] = link.href.split(paramSplitter);
-      link.href = href;
-    });
-  }
 
   private setButtonAriaChecked(bool: string) {
     if (this.$optionPosition) {
