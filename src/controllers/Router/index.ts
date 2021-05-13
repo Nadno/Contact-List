@@ -1,3 +1,5 @@
+import PageComponent from '../../views/routes/PageComponent';
+
 import { AppContext } from '../../App';
 import { IRouter, Route } from './types';
 import { IEmitter } from '../Emitter/types';
@@ -23,7 +25,7 @@ export default class Router implements IRouter {
 
     const [, params] = this.location.href.split('?');
     if (!params) return result;
-  
+
     const getParam = (value: string, key: string) => {
       result[key] = value;
     };
@@ -41,7 +43,11 @@ export default class Router implements IRouter {
     this.renderPath();
   }
 
-  public path(path: string, view: (ctx: AppContext) => HTMLElement[]): void {
+  public goBack(): void {
+    history.back();
+  }
+
+  public path(path: string, view: (ctx: AppContext) => PageComponent): void {
     this.routes.push({ path, view });
   }
 
