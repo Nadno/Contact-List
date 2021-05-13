@@ -1,0 +1,78 @@
+.modal-overlay {
+  position: absolute;
+  top: 0;
+  bottom: 0;
+  left: 0;
+  right: 0;
+  z-index: 100;
+
+  background-color: rgba(128, 128, 128, 0.45);
+}
+
+.modal {
+  position: fixed;
+  width: 100%;
+  max-width: 35ch;
+  padding: 2rem;
+
+  border-radius: 0.4rem;
+  background-color: #fff;
+  font-size: var(--font-16);
+
+  box-shadow: 1px 1px 4px var(--tertiary-color);
+
+  z-index: 100;
+
+  top: 50%;
+  left: 50%;
+
+  transform: translate(-50%, -50%);
+
+  hr {
+    height: 0.5px;
+    border: none;
+    background-color: var(--secondary-color);
+  }
+
+  &__content {
+    text-align: center;
+    color: var(--tertiary-color);
+    margin-bottom: 2rem;
+  }
+
+  &__buttons {
+    display: flex;
+    justify-content: space-around;
+    align-items: center;
+    margin-top: 2rem;
+  }
+
+  &__button {
+    all: unset;
+
+    cursor: pointer;
+    height: 3rem;
+    width: 6rem;
+    text-align: center;
+    border-radius: 0.4rem;
+
+    color: var(--tertiary-color);
+    background-color: var(--primary-color);
+    border: 1px solid var(--secondary-color);
+
+    &:focus {
+      outline: 1px solid var(--tertiary-color);
+      outline-offset: 4px;
+    }
+
+    &.--reject {
+      color: var(--bg-color);
+      background-color: tomato;
+      border: 1px solid rgb(197, 57, 32);
+    }
+  }
+
+  &.--warn-modal .modal__button {
+    width: 50%;
+  }
+}
