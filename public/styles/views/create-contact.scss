@@ -1,0 +1,27 @@
+@import '../components/button';
+
+.create-contact {
+  width: 100%;
+  height: 100vh;
+
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-direction: column;
+
+  font-size: var(--font-14);
+  color: var(--tertiary-color);
+
+  fieldset {
+    border: none;
+  }
+
+  legend {
+    font-size: var(--font-18);
+    margin-bottom: 2rem;
+  }
+
+  label {
+    display: block;
+  }
+}
