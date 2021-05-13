@@ -1,22 +1,30 @@
 import Contact from '.';
 import Component from '../component';
-import Settings from './Settings';
+import ContactOptions, { ContactOption } from '../ContactOptions/index';
 
+import RemoveContact from '../ContactOptions/Remove';
+import Link from '../../controllers/Link';
+
+import { AppContext, AppState } from '../../App';
 import { ContactAndPosition } from '../../models/ContactList/types';
 
 export default class Contacts extends Component {
-  private settings: Settings;
+  private settings: ContactOptions;
   private $list: HTMLElement;
 
-  constructor(attrs: Record<string, string>) {
+  constructor(app: AppContext<AppState>, attrs: Record<string, string>) {
     super();
 
-    this.settings = new Settings([
-      { href: '/edit', label: 'Editar' },
-      { href: '/remove', label: 'Apagar' },
-    ]);
+    const remove: ContactOption = ctx => new RemoveContact(ctx, app).render();
+    const edit: ContactOption = ctx =>
+      Link({
+        title: 'Editar contato',
+        href: 'edit?id=' + ctx.contactId,
+        content: 'Editar',
+      });
 
-    this.$list = Component.createElement('ol', [], attrs);
+    this.settings = new ContactOptions([edit, remove]);
+    this.$list = Component.createElement('ol', '', attrs);
   }
 
   public addSubContactList(letter: string): HTMLOListElement {
