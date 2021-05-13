@@ -18,11 +18,11 @@ export default class ContactOptions {
 
   constructor(private options: Array<ContactOption>) {
     this.$options = Component.createElement('div', '', {
-      class: 'options',
+      className: 'options',
     });
 
     this.$optionsList = Component.createElement('ul', '', {
-      class: 'option-list',
+      className: 'option-list',
     });
 
     this.$options.appendChild(this.$optionsList);
