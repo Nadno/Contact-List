@@ -20,6 +20,18 @@ class Emitter implements IEmitter {
     if (!(event in this.events)) return;
     this.events[event].forEach(cb => cb(...args));
   }
+
+  public remove(event: string, excludeFunc: Function): void {
+    if (!(event in this.events)) return;
+    const list = this.events[event];
+
+    for (const node of list) {
+      if (node.value === excludeFunc) {
+        list.remove(node);
+        break;
+      }
+    }
+  }
 }
 
 export default Emitter;
