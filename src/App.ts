@@ -2,12 +2,9 @@ import Render from './views/Render';
 import Router from './controllers/Router';
 import Observer from './controllers/Emitter';
 
-import Home from './views/routes/Home/Home';
-import EditContact from './views/routes/Contact/Edit';
-import CreateContact from './views/routes/Contact/Create';
-
 import ContactList from './models/ContactList';
 import StringUtil from './utils/StringUtil';
+import importPageComponent from './utils/importPageComponent';
 
 import { IEmitter } from './controllers/Emitter/types';
 import { IContactsList } from './models/ContactList/types';
@@ -57,8 +54,8 @@ export default class App<S = any> {
   private setRoutes(): void {
     const { router } = this.ctx;
 
-    router.path('/', ctx => new Home(ctx));
-    router.path('/edit', ctx => new EditContact(ctx));
-    router.path('/create', ctx => new CreateContact(ctx));
+    router.path('/', () => importPageComponent('Home'));
+    router.path('/edit', () => importPageComponent('Contact/Edit'));
+    router.path('/create', () => importPageComponent('Contact/Create'));
   }
 }
