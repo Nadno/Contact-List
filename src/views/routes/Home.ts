@@ -1,13 +1,13 @@
-import PageComponent from '../PageComponent';
-import Contacts from '../../Contact/Contacts';
-import Header from '../../Header';
+import PageComponent from './PageComponent';
+import Contacts from './../Contact/Contacts';
+import Header from './../Header';
 
-import { AppContext, AppState } from '../../../App';
+import { AppContext, AppState } from './../../App';
 
-import { ILinkedList } from '../../../models/LinkedList/types';
-import { IContact } from '../../../models/ContactList/types';
+import { ILinkedList } from './../../models/LinkedList/types';
+import { IContact } from './../../models/ContactList/types';
 
-import '../../../../public/styles/views/home.scss';
+import '../../../public/styles/views/home.scss';
 
 interface UpdateContactList {
   removed?: Record<string, number[]>;
@@ -59,7 +59,7 @@ export default class Home extends PageComponent {
       if (!$list) continue;
 
       const removeContact = (index: number) => {
-        const $contact = $list.querySelector(`[data-id=${letter}-${index}]`);
+        const $contact = $list.querySelector(`[data-id="${letter}-${index}"]`);
         if ($contact) $contact.remove();
       };
       removed[letter].forEach(removeContact);
