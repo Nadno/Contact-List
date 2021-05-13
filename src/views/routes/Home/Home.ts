@@ -9,6 +9,11 @@ import { IContact } from '../../../models/ContactList/types';
 
 import '../../../../public/styles/views/home.scss';
 
+interface UpdateContactList {
+  removed?: Record<string, number[]>;
+  added?: Record<string, number[]>;
+}
+
 export default class Home extends PageComponent {
   $elements: HTMLElement[];
   contactList: Contacts;
@@ -29,6 +34,9 @@ export default class Home extends PageComponent {
     const $resultList = header.contactsResult.render();
 
     this.$elements = [$header, $contactList, $resultList];
+
+    this.toggleResult = this.toggleResult.bind(this);
+    this.renderContacts = this.renderContacts.bind(this);
   }
 
   private renderContacts(
@@ -43,7 +51,27 @@ export default class Home extends PageComponent {
     contacts.forEach(renderContact);
   }
 
-  private toggleResult(turn: 'on' | 'off') {
+  public updateRemovedContacts({ removed }: UpdateContactList): void {
+    if (!removed) return;
+
+    for (const letter in removed) {
+      const $list = document.getElementById(`letter-${letter}`);
+      if (!$list) continue;
+
+      const removeContact = (index: number) => {
+        const $contact = $list.querySelector(`[data-id=${letter}-${index}]`);
+        if ($contact) $contact.remove();
+      };
+      removed[letter].forEach(removeContact);
+
+      const $rest = $list.querySelectorAll<HTMLElement>('.contact');
+      if (!$rest.length) return $list.closest('.contact-list')?.remove();
+
+      $rest.forEach(($el, index) => ($el.dataset.id = `${letter}-${index}`));
+    }
+  }
+
+  public toggleResult(turn: 'on' | 'off') {
     const [$header, $contactList, $resultList] = this.$elements;
     const $searchBar = $header.querySelector('.search-bar');
 
@@ -62,8 +90,9 @@ export default class Home extends PageComponent {
   public render(): HTMLElement[] {
     const { state, emitter } = this.ctx;
 
-    emitter.on('toggleResult', this.toggleResult.bind(this));
-    state.contacts.forEachList(this.renderContacts.bind(this));
+    emitter.on('updateContactList', this.updateRemovedContacts);
+    emitter.on('toggleResult', this.toggleResult);
+    state.contacts.forEachList(this.renderContacts);
 
     return this.$elements;
   }
