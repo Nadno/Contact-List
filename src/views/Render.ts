@@ -1,5 +1,5 @@
 import NotFound from './routes/404';
-import PageComponent from './routes/PageComponent';
+import PageComponent, { PageConstructor } from './routes/PageComponent';
 
 export default class Render {
   protected currentPage: PageComponent;
@@ -23,12 +23,18 @@ export default class Render {
     content.forEach(el => this.rootElement.appendChild(el));
   }
 
-  public renderRoute(
-    view: (ctx: any) => PageComponent = this.routeFallback
-  ): void {
+  public async renderRoute(
+    getView: () => Promise<PageConstructor>
+  ): Promise<void> {
     if (this.currentPage.unMount) this.currentPage.unMount();
 
-    this.currentPage = view(this.ctx);
-    this.renderElements(this.currentPage.render());
+    try {
+      const view = await getView();
+      this.currentPage = new view(this.ctx);
+    } catch (err) {
+      this.currentPage = this.routeFallback();
+    } finally {
+      this.renderElements(this.currentPage.render());
+    }
   }
 }
