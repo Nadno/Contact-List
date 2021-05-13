@@ -3,27 +3,27 @@
 
 @import '../layouts/contacts';
 
-.settings-container {
+.options-container {
   position: relative;
   height: 100%;
 
   &.on {
-    .settings {
+    .options {
       border-color: var(--secondary-color);
-
-      &-list {
-        opacity: 1;
-        pointer-events: initial;
-      }
 
       &::before {
         transform: translate(-50%, -50%);
       }
     }
+    
+    .option-list {
+      opacity: 1;
+      pointer-events: initial;
+    }
   }
 }
 
-.settings-button {
+.options-button {
   cursor: pointer;
   width: 2.5rem;
   height: 100%;
