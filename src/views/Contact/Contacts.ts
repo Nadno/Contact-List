@@ -30,6 +30,7 @@ export default class Contacts extends Component {
   public addSubContactList(letter: string): HTMLOListElement {
     const $list = Component.createElement('ol', '', {
       type: 'a',
+      id: `letter-${letter}`,
     });
 
     const $listLabel = Component.createElement('span', letter.toUpperCase(), {
