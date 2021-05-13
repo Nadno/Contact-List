@@ -19,7 +19,7 @@ export default class Home extends PageComponent {
 
     const header = new Header(ctx);
 
-    this.contactList = new Contacts({
+    this.contactList = new Contacts(ctx, {
       className: 'contacts',
       type: 'A',
     });
