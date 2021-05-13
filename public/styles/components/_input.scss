@@ -1,0 +1,10 @@
+.input-block {
+    margin-bottom: 1rem;
+
+    &__input {
+      height: 3rem;
+      padding: 0 1rem;
+      border-radius: 0.4rem;
+      border: 1px solid var(--secondary-color);
+    }
+  }
