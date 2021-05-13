@@ -35,7 +35,7 @@ export default class Header extends Component {
       }
     );
 
-    this.contactsResult = new Contacts({
+    this.contactsResult = new Contacts(ctx, {
       className: 'contacts search-result',
       type: 'A',
     });
