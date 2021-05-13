@@ -1,15 +1,13 @@
 import Component from '../component';
 import sleep from '../utils/sleep';
 
-interface SettingsItem {
-  href: string;
-  label: string;
+export interface ContactOptionsContext {
+  contactId: string;
+  $contact: HTMLElement;
+  closeOptions: (clearCb: Function) => any;
 }
 
-export default class Settings {
-  private $settings: HTMLElement;
-  private $settingsLinks: HTMLAnchorElement[];
-  private $settingPosition: HTMLElement | null = null;
+export type ContactOption = ({}: ContactOptionsContext) => HTMLElement;
 
 export default class ContactOptions {
   private $options: HTMLElement;
@@ -48,6 +46,24 @@ export default class ContactOptions {
     return $settingContainer;
   }
 
+  protected renderOptions($contact: HTMLElement): void {
+    this.$optionsList.innerHTML = '';
+
+    const optionContext = {
+      $contact,
+      contactId: $contact.dataset.id || '',
+      closeOptions: this.turnSettingsOff.bind(this),
+    };
+
+    const appendOption = (option: ContactOption) =>
+      this.$optionsList.appendChild(
+        Component.createElement('li', [option(optionContext)], {
+          className: 'option',
+        })
+      );
+
+    this.options.forEach(appendOption);
+  }
 
   private setButtonAriaChecked(bool: string) {
     if (this.$optionPosition) {
