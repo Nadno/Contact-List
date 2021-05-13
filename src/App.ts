@@ -57,8 +57,8 @@ export default class App<S = any> {
   private setRoutes(): void {
     const { router } = this.ctx;
 
-    router.path('/', ctx => new Home(ctx).render());
-    router.path('/edit', ctx => new EditContact(ctx).render());
-    router.path('/create', ctx => new CreateContact(ctx).render());
+    router.path('/', ctx => new Home(ctx));
+    router.path('/edit', ctx => new EditContact(ctx));
+    router.path('/create', ctx => new CreateContact(ctx));
   }
 }
