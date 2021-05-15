@@ -10,18 +10,19 @@
   justify-content: center;
 
   h2 {
-    line-height: 5rem;
     text-align: center;
-    font-size: var(--font-24);
+    font-size: var(--fs-24);
+    line-height: var(--lh-24);
     color: var(--tertiary-color);
+
+    margin-bottom: 1.6rem;
   }
 
   p {
     max-width: 32ch;
     text-align: center;
-    font-size: var(--font-18);
+    font-size: var(--fs-16);
+    line-height: var(--lh-16);
     color: var(--secondary-color);
-
-    
   }
 }
