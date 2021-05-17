@@ -24,8 +24,6 @@ export default class ContactOptions {
     });
 
     this.$options.appendChild(this.$optionsList);
-
-    this.handleClick = this.handleClick.bind(this);
   }
 
   public static OptionsButton(): HTMLElement {
@@ -34,7 +32,7 @@ export default class ContactOptions {
     );
 
     const $btn = Component.createElement('button', $dots, {
-      className: 'options-button',
+      className: 'options-button background-animation',
       role: 'switch',
       'aria-label': 'exibir opções de contato',
     });
@@ -72,7 +70,7 @@ export default class ContactOptions {
     }
   }
 
-  private moveOptionsTo(to: HTMLElement | null) {
+  private moveOptionsTo(to: HTMLElement | null): void {
     if (this.$optionPosition) {
       this.setButtonAriaChecked('false');
       this.$optionPosition.classList.remove('on');
@@ -87,18 +85,19 @@ export default class ContactOptions {
     }
   }
 
-  private turnSettingsOff(clearCb?: Function) {
+  public turnSettingsOff = (clearCb?: Function): void => {
     this.$options.setAttribute('aria-hidden', 'true');
     this.moveOptionsTo(null);
 
     const removeOptionsElement = () => {
       if (clearCb) clearCb();
+
       this.$options.remove();
       this.$options.removeEventListener('transitionend', removeOptionsElement);
     };
 
     this.$options.addEventListener('transitionend', removeOptionsElement);
-  }
+  };
 
   public turnOptionsOn = async (): Promise<void> => {
     if (this.$optionPosition) {
@@ -110,22 +109,16 @@ export default class ContactOptions {
     }
   };
 
-  public handleClick(e: Event) {
-    let $optionsButton = e.target as HTMLElement;
-    const parent = $optionsButton.parentNode as HTMLElement;
+  public handleClick = ({ target }: MouseEvent): void => {
+    let $optionsButton = target as HTMLElement;
+    if (!$optionsButton.matches('.options-button')) return;
 
-    if ($optionsButton.matches('.dot')) {
-      $optionsButton = parent;
-    }
+    const $optionsContainer = $optionsButton.parentNode as HTMLElement;
 
-    if ($optionsButton.matches('.options-button')) {
-      const $optionsContainer = $optionsButton.parentNode as HTMLElement;
+    const isCurrentSettingsOn = $optionsContainer.matches('.on');
+    if (isCurrentSettingsOn) return this.turnSettingsOff();
 
-      const isCurrentSettingsOn = $optionsContainer.matches('.on');
-      if (isCurrentSettingsOn) return this.turnSettingsOff();
-
-      this.moveOptionsTo($optionsContainer);
-      this.turnOptionsOn();
-    }
-  }
+    this.moveOptionsTo($optionsContainer);
+    this.turnOptionsOn();
+  };
 }
