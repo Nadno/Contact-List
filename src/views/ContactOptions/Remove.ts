@@ -27,22 +27,22 @@ export default class RemoveContact extends Component {
       'Você tem certeza de que deseja excluir este contato?'
     );
 
+    const { contactId, options } = this.optionsCtx;
     if (!isConfirmed) return;
 
     try {
-      const { options, app } = this;
-      const { contactId, closeOptions } = options;
+      const { state, emitter } = this.app;
 
       const [letterKey, index] = contactId.split('-');
 
-      app.state.contacts.deleteContacts({ [letterKey]: [Number(index)] });
+      state.contacts.deleteContacts({ [letterKey]: [Number(index)] });
 
       const updateContactList = () =>
-        app.emitter.emit('updateContactList', {
+        emitter.emit('updateContactList', {
           removed: { [letterKey]: [Number(index)] },
         });
 
-      closeOptions(updateContactList);
+      options.turnSettingsOff(updateContactList);
     } catch (err) {
       WarnModal.warn('Não foi possível excluir este contato!');
     }
