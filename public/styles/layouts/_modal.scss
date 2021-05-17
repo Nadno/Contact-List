@@ -50,19 +50,6 @@
     margin-top: 2rem;
   }
 
-  &__button {
-    &:focus {
-      outline: 1px solid var(--tertiary-color);
-      outline-offset: 4px;
-    }
-
-    &.--reject {
-      color: var(--bg-color);
-      background-color: tomato;
-      border: 1px solid rgb(197, 57, 32);
-    }
-  }
-
   &.--warn-modal .modal__button {
     width: 50%;
   }
