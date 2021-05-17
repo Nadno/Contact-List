@@ -90,10 +90,10 @@ export default class ContactList implements IContactsList {
       const list = this.lists[letterKey];
       const contact = list.at(index);
 
-      if (!contact) throw new Error('Contact not find');
+      if (!contact) throw new Error('Contact not found');
       const newContact = Object.assign(contact.value, data);
 
-      const deletedContact = list.remove(contact);
+      const deletedContact = this.deleteContact(letterKey, contact);
       if (!deletedContact) return result;
 
       this.createContact(newContact);
@@ -122,6 +122,16 @@ export default class ContactList implements IContactsList {
     this.lists[key].insertSort(contact);
   }
 
+  public deleteContact(
+    key: string,
+    contact: IListNode<IContact>
+  ): IContact | undefined {
+    const deletedContact = this.lists[key].remove(contact);
+    if (!this.lists[key].length) delete this.lists[key];
+
+    return deletedContact ? deletedContact.value : undefined;
+  }
+
   public deleteContacts(contactsMap: ContactPositions): ILinkedList<IContact> {
     const deletedContacts = new LinkedList<IContact>();
 
@@ -130,12 +140,11 @@ export default class ContactList implements IContactsList {
       const contactsNodes = list.nodesAt(...contactsMap[key]);
 
       const deleteContactNode = (node: IListNode<IContact>) => {
-        let deletedNode = list.remove(node);
-        if (deletedNode) deletedContacts.push(deletedNode.value);
+        let deletedNode = this.deleteContact(key, node);
+        if (deletedNode) deletedContacts.push(deletedNode);
       };
 
       contactsNodes.forEach(deleteContactNode);
-      if (!list.length) delete this.lists[key];
     }
 
     return deletedContacts;
