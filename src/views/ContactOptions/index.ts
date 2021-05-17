@@ -1,5 +1,5 @@
+import AsyncUtil from '../../utils/AsyncUtil';
 import Component from '../component';
-import sleep from '../utils/sleep';
 
 export interface ContactOptionsContext {
   contactId: string;
@@ -100,15 +100,15 @@ export default class ContactOptions {
     this.$options.addEventListener('transitionend', removeOptionsElement);
   }
 
-  private async turnOptionsOn() {
+  public turnOptionsOn = async (): Promise<void> => {
     if (this.$optionPosition) {
       this.$options.setAttribute('aria-hidden', 'false');
       this.setButtonAriaChecked('true');
 
-      await sleep(100);
+      await AsyncUtil.sleep(100);
       this.$optionPosition.classList.add('on');
     }
-  }
+  };
 
   public handleClick(e: Event) {
     let $optionsButton = e.target as HTMLElement;
