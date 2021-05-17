@@ -1,5 +1,5 @@
 @import '../components/contact';
-@import '../components/settings';
+@import '../components/options';
 
 @import '../layouts/contacts';
 
@@ -40,7 +40,7 @@
   }
 }
 
-.search-result.on {
+.contacts .search-result.on {
   position: absolute;
   width: 100%;
 
@@ -55,7 +55,7 @@
     position: absolute;
 
     color: var(--tertiary-color);
-    font-size: var(--font-16);
+    font-size: var(--fs-16);
     opacity: 0.7;
 
     top: 50%;
@@ -65,6 +65,5 @@
 }
 
 .contacts.--hidden {
-  visibility: hidden;
-  height: 0;
+  display: none;
 }
