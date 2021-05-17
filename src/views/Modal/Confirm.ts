@@ -19,11 +19,11 @@ export default class ConfirmModal extends Modal {
     super('--confirm-modal');
 
     this.$confirm = Component.createElement('button', 'Sim', {
-      className: 'modal__button',
+      className: 'button modal__button',
     });
 
     this.$reject = Component.createElement('button', 'Não', {
-      className: 'modal__button --reject',
+      className: 'button modal__button --red',
     });
   }
 
@@ -73,6 +73,7 @@ export default class ConfirmModal extends Modal {
 
   public showModal(): Promise<boolean> {
     this.where.appendChild(this.render());
+    this.$confirm.focus();
     return this.confirm();
   }
 }
