@@ -57,5 +57,6 @@ export default class App<S = any> {
     router.path('/', () => importPageComponent('Home'));
     router.path('/edit', () => importPageComponent('Contact/Edit'));
     router.path('/create', () => importPageComponent('Contact/Create'));
+    router.path('/contact', () => importPageComponent('Contact/index'));
   }
 }
