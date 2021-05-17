@@ -109,6 +109,14 @@ export default class ContactOptions {
     }
   };
 
+  public focus(): void {
+    if (!this.$optionPosition) return;
+
+    const $btn =
+      this.$optionPosition.querySelector<HTMLElement>('.options-button');
+    if ($btn) $btn.focus();
+  }
+
   public handleClick = ({ target }: MouseEvent): void => {
     let $optionsButton = target as HTMLElement;
     if (!$optionsButton.matches('.options-button')) return;
