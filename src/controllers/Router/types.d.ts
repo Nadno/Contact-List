@@ -1,11 +1,12 @@
+import { AppContext } from "../../App";
+import { PageConstructor } from "../../views/routes/PageComponent";
+
 export interface IRouter {
-  path(path: string, cb: Function): void
+  path(path: string, view: any): void;
   goTo(path: string): void;
 }
 
 export interface Route {
   path: string;
-  view: any;
+  view: (ctx: AppContext) => Promise<PageConstructor>;
 }
-
-export type Routes = Array<Route>;
