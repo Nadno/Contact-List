@@ -23,6 +23,9 @@ export default class ContactOptions {
       className: 'option-list',
     });
 
+    this.$optionsList.addEventListener('focusout', this.handleFocusout);
+    this.$options.addEventListener('keyup', this.handleScape);
+
     this.$options.appendChild(this.$optionsList);
   }
 
@@ -107,6 +110,19 @@ export default class ContactOptions {
       await AsyncUtil.sleep(100);
       this.$optionPosition.classList.add('on');
     }
+  };
+
+  protected handleFocusout = ({ target }: Event) => {
+    const $option = (target as HTMLElement).parentNode as HTMLElement;
+
+    const isLastItem = !$option.nextSibling;
+    if (isLastItem) this.turnSettingsOff();
+  };
+
+  protected handleScape = ({ code }: KeyboardEvent) => {
+    if (code !== 'Escape') return;
+    this.focus();
+    this.turnSettingsOff();
   };
 
   public focus(): void {
