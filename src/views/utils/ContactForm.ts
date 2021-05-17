@@ -1,6 +1,6 @@
 import Form from './Form';
 
-import '../../../public/styles/views/create-contact.scss';
+import '../../../public/styles/views/contact-form.scss';
 
 interface ContactFormData {
   name: string;
@@ -43,7 +43,7 @@ export default class ContactForm {
           placeholder: 'ex.: 912345678',
         },
       ])
-      .createForm({ class: 'create-contact' }, submit, handleSubmit);
+      .createForm({ class: 'contact-form' }, submit, handleSubmit);
 
     this.data = data;
     this.formElement = formElement;

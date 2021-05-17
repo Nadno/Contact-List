@@ -1,11 +1,9 @@
 import ContactPage from './ContactPage';
 import ContactForm from '../../utils/ContactForm';
+import WarnModal from '../../Modal/Warn';
 
 import { AppContext, AppState } from '../../../App';
-
-import '../../../../public/styles/views/create-contact.scss';
 import { IContact } from '../../../models/ContactList/types';
-import WarnModal from '../../Modal/Warn';
 
 export default class CreateContact extends ContactPage {
   private $element: HTMLElement;
