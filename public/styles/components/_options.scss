@@ -69,7 +69,6 @@
   position: absolute;
   width: var(--settings-size);
   height: var(--settings-size);
-  padding: 1rem;
 
   z-index: 10;
   overflow: hidden;
@@ -86,13 +85,9 @@
     & > * {
       all: unset;
       width: 100%;
+      display: block;
       font-size: var(--fs-16);
       color: var(--tertiary-color);
-    }
-
-    &:hover {
-      opacity: 0.7;
-      transition: opacity 200ms ease;
     }
   }
 
