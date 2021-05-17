@@ -4,7 +4,7 @@ import ContactOptions, { ContactOption } from '../ContactOptions/index';
 
 import RemoveContact from '../ContactOptions/Remove';
 import Link from '../../controllers/Link';
-import throttle from '../../utils/throttle';
+import AsyncUtil from '../../utils/AsyncUtil';
 
 import { AppContext, AppState } from '../../App';
 import { ContactAndPosition } from '../../models/ContactList/types';
@@ -16,12 +16,18 @@ export default class Contacts extends Component {
   constructor(app: AppContext<AppState>, attrs: Record<string, string>) {
     super();
 
-    const remove: ContactOption = ctx => new RemoveContact(ctx, app).render();
+    const remove: ContactOption = ctx =>
+      new RemoveContact(
+        { className: 'background-animation' },
+        ctx,
+        app
+      ).render();
     const edit: ContactOption = ctx =>
       Link({
         title: 'Editar contato',
         href: 'edit?id=' + ctx.contactId,
         content: 'Editar',
+        className: 'background-animation',
       });
 
     this.settings = new ContactOptions([edit, remove]);
@@ -68,7 +74,7 @@ export default class Contacts extends Component {
     const triggerRateLimit = 300;
     this.$list.addEventListener(
       'click',
-      throttle(this.settings.handleClick, triggerRateLimit)
+      AsyncUtil.throttle(this.settings.handleClick, triggerRateLimit)
     );
 
     return this.$list;
