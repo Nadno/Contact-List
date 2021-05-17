@@ -1,6 +1,8 @@
+import { ILinkedList, IListNode } from '../LinkedList/types';
+
 export interface IContact {
   name: string;
-  number: string;
+  tel: string;
   createdAt: string;
 }
 
@@ -8,15 +10,22 @@ export interface ContactPositions {
   [contactFirstLetter: string]: number[];
 }
 
-export interface IContactsList {
-  [Symbol.iterator](): void;
+export interface ContactPosition {
+  letterKey: string;
+  index: number;
+}
 
-  sort(): void;
-  reverse(): void;
-  editContact(
-    data: Partial<IContact>,
-    position: { key: string; index: number }
-  ): boolean;
+export interface IContactsList {
+  forEachList(
+    cb: (contacts: ILinkedList<IContact>, letterKey: string) => any
+  ): void;
+  getContact(key: string, index: number): IListNode<IContact> | undefined;
+  findAll(name: string): ILinkedList<ContactAndPosition>;
+  editContact(data: Partial<IContact>, position: ContactPosition): boolean;
   createContact(contact: IContact): void;
-  deleteContacts(contactsPositions: ContactPositions): IContact[] | undefined;
+  deleteContacts(contactsPositions: ContactPositions): ILinkedList<IContact>;
+}
+
+export interface ContactAndPosition extends ContactPosition {
+  contact: IContact;
 }
