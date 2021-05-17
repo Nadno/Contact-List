@@ -11,7 +11,7 @@ export default class Contact extends Component<HTMLLIElement> {
     const $name = Link({
       content: name,
       href: `/contact?id=${id}`,
-      className: 'contact__name',
+      className: 'contact__name background-animation',
     });
 
     const $edit = ContactOptions.OptionsButton();

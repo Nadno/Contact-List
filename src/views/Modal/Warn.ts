@@ -22,7 +22,7 @@ export default class WarnModal extends Modal {
     super('--warn-modal');
 
     this.$ok = Component.createElement('button', 'OK', {
-      className: 'modal__button',
+      className: 'button modal__button',
     });
   }
 

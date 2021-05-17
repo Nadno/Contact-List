@@ -20,9 +20,7 @@ export default abstract class ContactPage extends PageComponent {
     const contact = state.contacts.getContact(key, Number(index));
     if (!contact) return result;
 
-    const { name = '', tel = '' } = contact.value;
-    Object.assign(result, { name, tel });
-
+    Object.assign(result, contact.value);
     return result;
   }
 }
