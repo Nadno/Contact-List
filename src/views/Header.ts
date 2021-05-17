@@ -2,11 +2,11 @@ import Link from '../controllers/Link';
 import Component from './component';
 
 import { AppContext, AppState } from '../App';
-import { IEmitter } from '../controllers/Emitter/types';
 import { ILinkedList } from '../models/LinkedList/types';
 import { ContactAndPosition } from '../models/ContactList/types';
 
 import Contacts from './Contact/Contacts';
+import AsyncUtil from '../utils/AsyncUtil';
 
 export default class Header extends Component {
   private $header: HTMLElement;
@@ -24,7 +24,7 @@ export default class Header extends Component {
       title: 'Criar contato',
       href: '/create',
       content: '+',
-      className: 'header__add-contact',
+      className: 'header__add-contact background-animation',
     });
 
     this.$header = Component.createElement(
@@ -51,7 +51,7 @@ export default class Header extends Component {
     });
 
     const $closeSearch = Component.createElement('button', 'X', {
-      className: 'search__close',
+      className: 'search__close ',
     });
 
     const $searchBar = Component.createElement(
@@ -62,7 +62,11 @@ export default class Header extends Component {
       }
     );
 
-    $search.addEventListener('input', this.handleFindContact);
+    const halfSecond = 500;
+    $search.addEventListener(
+      'input',
+      AsyncUtil.debounce(this.handleFindContact, halfSecond)
+    );
 
     const { emitter } = this.ctx;
     const turnResultOn = () => emitter.emit('toggleResult', 'on');
@@ -78,35 +82,22 @@ export default class Header extends Component {
     return $searchBar;
   }
 
-  private scheduleSearch(query: string): void {
-    const handleResult = (results: ILinkedList<ContactAndPosition>) => {
-      const { contactsResult } = this;
-      contactsResult.clearList();
+  private handleContactsResult(results: ILinkedList<ContactAndPosition>): void {
+    const { contactsResult } = this;
+    contactsResult.clearList();
 
-      const renderContact = (result: ContactAndPosition) =>
-        contactsResult.addContact(result);
+    const renderContact = (result: ContactAndPosition) =>
+      contactsResult.addContact(result);
 
-      results.forEach(renderContact);
-    };
-
-    const { state } = this.ctx;
-
-    const search = () => {
-      handleResult(state.contacts.findAll(query));
-      this.scheduledSearch = null;
-    };
-
-    const halfSecond = 500;
-    this.scheduledSearch = setTimeout(search, halfSecond);
+    results.forEach(renderContact);
   }
 
   private handleFindContact(e: Event): void {
     const { value } = e.target as HTMLInputElement;
-
-    if (this.scheduledSearch) clearTimeout(this.scheduledSearch);
     if (!value) return this.contactsResult.clearList();
 
-    this.scheduleSearch(value);
+    const { state } = this.ctx;
+    this.handleContactsResult(state.contacts.findAll(value));
   }
 
   public render(): HTMLElement {
