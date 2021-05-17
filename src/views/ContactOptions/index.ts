@@ -4,7 +4,7 @@ import Component from '../component';
 export interface ContactOptionsContext {
   contactId: string;
   $contact: HTMLElement;
-  closeOptions: (clearCb: Function) => any;
+  options: ContactOptions;
 }
 
 export type ContactOption = ({}: ContactOptionsContext) => HTMLElement;
@@ -52,7 +52,7 @@ export default class ContactOptions {
     const optionContext = {
       $contact,
       contactId: $contact.dataset.id || '',
-      closeOptions: this.turnSettingsOff.bind(this),
+      options: this,
     };
 
     const appendOption = (option: ContactOption) =>
