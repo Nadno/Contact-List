@@ -10,7 +10,8 @@ export default class RemoveContact extends Component {
   private $button: HTMLElement;
 
   constructor(
-    private options: ContactOptionsContext,
+    attrs: Record<string, string>,
+    private optionsCtx: ContactOptionsContext,
     private app: AppContext<AppState>
   ) {
     super();
@@ -18,7 +19,7 @@ export default class RemoveContact extends Component {
     this.handleConfirmRemoveContact =
       this.handleConfirmRemoveContact.bind(this);
 
-    this.$button = Component.createElement('button', 'Excluir');
+    this.$button = Component.createElement('button', 'Excluir', attrs);
   }
 
   private async handleConfirmRemoveContact(): Promise<void> {
