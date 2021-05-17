@@ -28,7 +28,11 @@ export default class RemoveContact extends Component {
     );
 
     const { contactId, options } = this.optionsCtx;
-    if (!isConfirmed) return;
+    if (!isConfirmed) {
+      options.focus();
+      options.turnSettingsOff();
+      return;
+    }
 
     try {
       const { state, emitter } = this.app;
