@@ -10,32 +10,12 @@ import {
 } from './types';
 
 const ALPHABET_KEYS = 'abcdefghijklmnopqtrsuvwxyz';
-
 export default class ContactList implements IContactsList {
   public static especialKey = '#';
 
-  private contactProperty;
-  private sortMethod: 'crescent' | 'decrescent';
-  private sortConfig = {
-    crescent: (c1: IContact, c2: IContact) =>
-      c1[this.contactProperty as keyof IContact] <
-      c2[this.contactProperty as keyof IContact],
-    decrescent: (c1: IContact, c2: IContact) =>
-      c1[this.contactProperty as keyof IContact] >
-      c2[this.contactProperty as keyof IContact],
-  };
-
   private lists: Record<string, LinkedList<IContact>> = {};
-  private favorites: LinkedList<IContact> = new LinkedList();
 
-  constructor(
-    private stringUtil: StringUtil,
-    contactProperty = 'name',
-    sortMethod = 'crescent'
-  ) {
-    this.contactProperty = contactProperty;
-    this.sortMethod = sortMethod as 'crescent';
-  }
+  constructor(private stringUtil: StringUtil) {}
 
   public forEachList(
     cb: (contacts: ILinkedList<IContact>, letterKey: string) => any,
@@ -78,10 +58,6 @@ export default class ContactList implements IContactsList {
 
     return list.at(index);
   }
-
-  public sort(): void {}
-
-  public reverse(): void {}
 
   public findAll(name: string): ILinkedList<ContactAndPosition> {
     const result = new LinkedList<ContactAndPosition>();
