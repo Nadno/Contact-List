@@ -64,7 +64,7 @@ export default class ContactList implements IContactsList {
     const { likeMatch, normalize } = this.stringUtil;
 
     const normalizedName = normalize(name);
-    const [startByLetterKey] = normalizedName;
+    const startByLetterKey = normalizedName[0];
 
     const search = (contacts: ILinkedList<IContact>, letterKey: string) => {
       const searchInList = (contact: IContact, index: number) => {
@@ -106,7 +106,7 @@ export default class ContactList implements IContactsList {
   }
 
   public createContact(contact: IContact): void {
-    const [key] = this.stringUtil.normalize(contact.name);
+    const key = this.stringUtil.normalize(contact.name)[0];
 
     const isAlphabeticLetter = ALPHABET_KEYS.includes(key);
     if (isAlphabeticLetter && !(key in this.lists)) this.addList(key);
@@ -119,7 +119,7 @@ export default class ContactList implements IContactsList {
       return;
     }
 
-    this.lists[key].insertSort(contact, this.sortConfig[this.sortMethod]);
+    this.lists[key].insertSort(contact);
   }
 
   public deleteContacts(contactsMap: ContactPositions): ILinkedList<IContact> {
