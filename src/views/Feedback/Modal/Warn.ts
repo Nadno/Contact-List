@@ -1,4 +1,4 @@
-import Component from '../component';
+import Component from '../../component';
 import Modal from '.';
 import ModalTemplate from './ModalTemplate';
 
@@ -33,7 +33,7 @@ export default class WarnModal extends Modal {
 
   public warn(): void {
     const handleWarn = () => {
-      this.unMount();
+      this.unbuild();
       this.$ok.removeEventListener('click', handleWarn);
 
       if (this.okAction) this.okAction();
@@ -42,17 +42,17 @@ export default class WarnModal extends Modal {
     this.$ok.addEventListener('click', handleWarn);
   }
 
-  public render(): HTMLElement {
+  public build(): HTMLElement {
     const $buttons = this.getElementByType('buttons');
 
     const { $ok } = this;
     $buttons.appendChild($ok);
 
-    return super.render();
+    return super.build();
   }
 
   public showModal(): void {
-    this.where.appendChild(this.render());
+    this.where.appendChild(this.build());
     this.warn();
   }
 }

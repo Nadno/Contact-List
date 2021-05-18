@@ -1,4 +1,4 @@
-import Component from '../component';
+import Component from '../../component';
 import Modal from '.';
 import ModalTemplate from './ModalTemplate';
 
@@ -39,7 +39,7 @@ export default class ConfirmModal extends Modal {
       resolve: (answer: boolean | Promise<boolean>) => any
     ) => {
       const handleReject = () => {
-        this.unMount();
+        this.unbuild();
         resolve(false);
 
         $confirm.removeEventListener('click', handleConfirm);
@@ -47,7 +47,7 @@ export default class ConfirmModal extends Modal {
       };
 
       const handleConfirm = () => {
-        this.unMount();
+        this.unbuild();
         resolve(true);
 
         $confirm.removeEventListener('click', handleConfirm);
@@ -61,18 +61,18 @@ export default class ConfirmModal extends Modal {
     return new Promise(handleButtons);
   }
 
-  public render(): HTMLElement {
+  public build(): HTMLElement {
     const $buttons = this.getElementByType('buttons');
 
     const { $confirm, $reject } = this;
     $buttons.appendChild($confirm);
     $buttons.appendChild($reject);
 
-    return super.render();
+    return super.build();
   }
 
   public showModal(): Promise<boolean> {
-    this.where.appendChild(this.render());
+    this.where.appendChild(this.build());
     this.$confirm.focus();
     return this.confirm();
   }

@@ -1,5 +1,5 @@
 import Modal from '.';
-import Component from '../component';
+import Component from '../../component';
 
 export default class ModalTemplate {
   public static defaultTemplate<M extends Modal>(modal: M): M {
