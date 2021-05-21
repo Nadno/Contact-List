@@ -1,6 +1,6 @@
 import ContactPage from './ContactPage';
 import ContactForm from '../../utils/ContactForm';
-import WarnModal from '../../Modal/Warn';
+import WarnModal from '../../Feedback/Modal/Warn';
 
 import { AppContext, AppState } from '../../../App';
 

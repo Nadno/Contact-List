@@ -1,7 +1,7 @@
 import Component from '../component';
-import ConfirmModal from '../Modal/Confirm';
+import ConfirmModal from '../Feedback/Modal/Confirm';
 
-import WarnModal from '../Modal/Warn';
+import WarnModal from '../Feedback/Modal/Warn';
 
 import { AppContext, AppState } from '../../App';
 import { ContactOptionsContext } from '.';
@@ -41,12 +41,9 @@ export default class RemoveContact extends Component {
 
       state.contacts.deleteContacts({ [letterKey]: [Number(index)] });
 
-      const updateContactList = () =>
-        emitter.emit('updateContactList', {
-          removed: { [letterKey]: [Number(index)] },
-        });
-
-      options.turnSettingsOff(updateContactList);
+      emitter.emit('updateContactList', {
+        removed: { [letterKey]: [Number(index)] },
+      });
     } catch (err) {
       WarnModal.warn('Não foi possível excluir este contato!');
     }

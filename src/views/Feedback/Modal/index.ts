@@ -1,5 +1,5 @@
 import Component from '../../component';
-import PopUp from '../PopUp';
+import PopUp from '../Dialog';
 
 class Modal extends PopUp {
   public static $where: HTMLElement;
