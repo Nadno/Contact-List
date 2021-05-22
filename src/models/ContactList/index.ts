@@ -1,17 +1,20 @@
 import StringUtil from '../../utils/StringUtil';
 import LinkedList from '../LinkedList';
+
 import { ILinkedList, IListNode } from '../LinkedList/types';
 import {
   ContactAndPosition,
-  ContactPosition,
   ContactPositions,
+  ContactPosition,
   IContact,
   IContactsList,
 } from './types';
 
-const ALPHABET_KEYS = 'abcdefghijklmnopqtrsuvwxyz';
+const SORT_FUNCTION = (a: IContact, b: IContact) => a.name < b.name;
+
 export default class ContactList implements IContactsList {
-  public static especialKey = '#';
+  public static readonly ALPHABET_KEYS = 'abcdefghijklmnopqtrsuvwxyz';
+  public static readonly especialKey = '#';
 
   private lists: Record<string, LinkedList<IContact>> = {};
 
@@ -22,7 +25,7 @@ export default class ContactList implements IContactsList {
     startByLetterKey: string = ''
   ) {
     const startKey = this.stringUtil.normalize(startByLetterKey);
-    const alphabetKeys = ALPHABET_KEYS.replace(startKey, '');
+    const alphabetKeys = ContactList.ALPHABET_KEYS.replace(startKey, '');
 
     const keys = startKey + alphabetKeys + ContactList.especialKey;
 
@@ -31,22 +34,18 @@ export default class ContactList implements IContactsList {
     }
   }
 
-  private addList(key: string): void {
-    if (key.length !== 1)
+  private addList(letterKey: string): void {
+    if (letterKey.length !== 1)
       throw new Error('The key string exceeded the allowed length');
-    this.lists[key] = new LinkedList<IContact>();
+    this.lists[letterKey] = new LinkedList<IContact>();
   }
 
-  private addSymbolList(): void {
-    this.lists[ContactList.especialKey] = new LinkedList<IContact>();
-  }
-
-  public getList(key: string): ILinkedList<IContact> | undefined {
+  public getList(letterKey: string): ILinkedList<IContact> | undefined {
     const normalizedKey =
-      this.stringUtil.normalize(key) || ContactList.especialKey;
+      this.stringUtil.normalize(letterKey) || ContactList.especialKey;
 
     if (normalizedKey.length !== 1) return undefined;
-    return this.lists[key];
+    return this.lists[letterKey];
   }
 
   public getContact(
