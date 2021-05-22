@@ -48,6 +48,15 @@ export default class ContactList implements IContactsList {
     return this.lists[letterKey];
   }
 
+  public getLetterKey(name: string): string {
+    const letterKey = this.stringUtil.normalize(name)[0];
+
+    if (!letterKey) return ContactList.especialKey;
+    if (ContactList.ALPHABET_KEYS.includes(letterKey)) return letterKey;
+
+    return ContactList.especialKey;
+  }
+
   public getContact(
     key: string = '',
     index: number
@@ -99,21 +108,14 @@ export default class ContactList implements IContactsList {
     }
   }
 
-  public createContact(contact: IContact): void {
-    const key = this.stringUtil.normalize(contact.name)[0];
+  public createContact(contact: IContact): IListNode<IContact> | undefined {
+    const letterKey = this.getLetterKey(contact.name);
+    if (!this.lists[letterKey]) this.addList(letterKey);
 
-    const isAlphabeticLetter = ALPHABET_KEYS.includes(key);
-    if (isAlphabeticLetter && !(key in this.lists)) this.addList(key);
+    if (letterKey === ContactList.especialKey)
+      return this.lists[letterKey].insert('end', contact);
 
-    if (!isAlphabeticLetter) {
-      const hasEspecialKey = ContactList.especialKey in this.lists;
-      if (!hasEspecialKey) this.addSymbolList();
-
-      this.lists[ContactList.especialKey].push(contact);
-      return;
-    }
-
-    this.lists[key].insertSort(contact);
+    return this.lists[letterKey].insertSort(contact, SORT_FUNCTION);
   }
 
   public deleteContact(
