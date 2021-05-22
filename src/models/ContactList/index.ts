@@ -82,9 +82,7 @@ export default class ContactList implements IContactsList {
   public editContact(
     data: Partial<IContact>,
     { letterKey, index }: ContactPosition
-  ): boolean {
-    let result = false;
-
+  ): IListNode<IContact> | undefined {
     try {
       const list = this.lists[letterKey];
       const contact = list.at(index);
@@ -93,14 +91,11 @@ export default class ContactList implements IContactsList {
       const newContact = Object.assign(contact.value, data);
 
       const deletedContact = this.deleteContact(letterKey, contact);
-      if (!deletedContact) return result;
+      if (!deletedContact) return;
 
-      this.createContact(newContact);
-      result = true;
+      return this.createContact(newContact);
     } catch (err) {
       console.error(err);
-    } finally {
-      return result;
     }
   }
 
@@ -122,17 +117,17 @@ export default class ContactList implements IContactsList {
   }
 
   public deleteContact(
-    key: string,
+    letterKey: string,
     contact: IListNode<IContact>
-  ): IContact | undefined {
-    const deletedContact = this.lists[key].remove(contact);
-    if (!this.lists[key].length) delete this.lists[key];
+  ): IListNode<IContact> | undefined {
+    const deletedContact = this.lists[letterKey].remove(contact);
+    if (!this.lists[letterKey].length) delete this.lists[letterKey];
 
-    return deletedContact ? deletedContact.value : undefined;
+    return deletedContact;
   }
 
-  public deleteContacts(contactsMap: ContactPositions): ILinkedList<IContact> {
-    const deletedContacts = new LinkedList<IContact>();
+  public deleteContacts(contactsMap: ContactPositions): IListNode<IContact>[] {
+    const deletedContacts: IListNode<IContact>[] = [];
 
     for (const key in contactsMap) {
       const list = this.lists[key];
