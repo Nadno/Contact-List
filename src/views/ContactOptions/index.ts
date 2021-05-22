@@ -88,33 +88,32 @@ export default class ContactOptions {
     }
   }
 
-  public turnSettingsOff = (clearCb?: Function): void => {
+  public turnSettingsOff = (): void => {
+    if (!this.$optionPosition) return;
+
     this.$options.setAttribute('aria-hidden', 'true');
     this.moveOptionsTo(null);
 
     const removeOptionsElement = () => {
-      if (clearCb) clearCb();
-
-      this.$options.remove();
       this.$options.removeEventListener('transitionend', removeOptionsElement);
+      this.$options.remove();
     };
 
     this.$options.addEventListener('transitionend', removeOptionsElement);
   };
 
   public turnOptionsOn = async (): Promise<void> => {
-    if (this.$optionPosition) {
-      this.$options.setAttribute('aria-hidden', 'false');
-      this.setButtonAriaChecked('true');
+    if (!this.$optionPosition) return;
 
-      await AsyncUtil.sleep(100);
-      this.$optionPosition.classList.add('on');
-    }
+    this.$options.setAttribute('aria-hidden', 'false');
+    this.setButtonAriaChecked('true');
+
+    await AsyncUtil.sleep(100);
+    this.$optionPosition.classList.add('on');
   };
 
   protected handleFocusout = ({ target }: Event) => {
     const $option = (target as HTMLElement).parentNode as HTMLElement;
-
     const isLastItem = !$option.nextSibling;
     if (isLastItem) this.turnSettingsOff();
   };
