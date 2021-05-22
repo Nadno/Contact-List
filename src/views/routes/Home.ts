@@ -10,6 +10,7 @@ import { IContact } from './../../models/ContactList/types';
 import '../../../public/styles/views/home.scss';
 
 interface UpdateContactList {
+  letterKey?: string;
   removed?: Record<string, number[]>;
   added?: Record<string, number[]>;
 }
@@ -39,38 +40,6 @@ export default class Home extends PageComponent {
     this.renderContacts = this.renderContacts.bind(this);
   }
 
-  private renderContacts(
-    contacts: ILinkedList<IContact>,
-    letterKey: string
-  ): void {
-    const $contactsList = this.contactList.addSubContactList(letterKey);
-
-    const renderContact = (contact: IContact, index: number) =>
-      this.contactList.addContact({ contact, letterKey, index }, $contactsList);
-
-    contacts.forEach(renderContact);
-  }
-
-  public updateRemovedContacts({ removed }: UpdateContactList): void {
-    if (!removed) return;
-
-    for (const letter in removed) {
-      const $list = document.getElementById(`letter-${letter}`);
-      if (!$list) continue;
-
-      const removeContact = (index: number) => {
-        const $contact = $list.querySelector(`[data-id="${letter}-${index}"]`);
-        if ($contact) $contact.remove();
-      };
-      removed[letter].forEach(removeContact);
-
-      const $rest = $list.querySelectorAll<HTMLElement>('.contact');
-      if (!$rest.length) return $list.closest('.contact-list')?.remove();
-
-      $rest.forEach(($el, index) => ($el.dataset.id = `${letter}-${index}`));
-    }
-  }
-
   public toggleResult(turn: 'on' | 'off') {
     const [$header, $contactList, $resultList] = this.$elements;
     const $searchBar = $header.querySelector('.search-bar');
@@ -87,10 +56,80 @@ export default class Home extends PageComponent {
     }
   }
 
+  private removeContactList(letterKey: string): void {
+    try {
+      const $list = document.getElementById(
+        `letter-${letterKey}`
+      ) as HTMLOListElement;
+      const $listContainer = $list.closest('.contact-list') as HTMLLIElement;
+
+      $listContainer.remove();
+    } catch (err) {
+      console.log(err);
+    }
+  }
+
+  private renderContacts(
+    contacts: ILinkedList<IContact>,
+    letterKey: string
+  ): void {
+    try {
+      const $contactList =
+        (document.getElementById(`letter-${letterKey}`) as HTMLOListElement) ||
+        this.contactList.addSubContactList(letterKey);
+
+      if (!contacts.length) return this.removeContactList(letterKey);
+      $contactList.innerHTML = '';
+
+      const renderContact = (contact: IContact, index: number) =>
+        this.contactList.addContact(
+          { contact, letterKey, index },
+          $contactList
+        );
+
+      contacts.forEach(renderContact);
+    } catch (err) {
+      console.error(err);
+    }
+  }
+
+  public updateRemovedContacts = ({ removed }: UpdateContactList): void => {
+    if (!removed) return;
+
+    for (const letter in removed) {
+      const $list = document.getElementById(
+        `letter-${letter}`
+      ) as HTMLOListElement;
+      if (!$list) continue;
+
+      const removeContact = (index: number) => {
+        const $contact = $list.querySelector(`[data-id="${letter}-${index}"]`);
+        if ($contact) $contact.remove();
+      };
+      removed[letter].forEach(removeContact);
+
+      const $rest = $list.querySelectorAll<HTMLElement>('.contact');
+      if (!$rest.length) return this.removeContactList(letter);
+
+      $rest.forEach(($el, index) => ($el.dataset.id = `${letter}-${index}`));
+    }
+  };
+
+  public updateContactList = ({ letterKey }: UpdateContactList) => {
+    if (!letterKey) return;
+
+    const { state } = this.ctx;
+    const contactList = state.contacts.getList(letterKey);
+
+    if (!contactList) return this.removeContactList(letterKey);
+    this.renderContacts(contactList, letterKey);
+  };
+
   public unMount(): void {
     const { emitter } = this.ctx;
 
     emitter.remove('updateContactList', this.updateRemovedContacts);
+    emitter.remove('updateContactList', this.updateContactList);
     emitter.remove('toggleResult', this.toggleResult);
   }
 
@@ -98,6 +137,7 @@ export default class Home extends PageComponent {
     const { state, emitter } = this.ctx;
 
     emitter.on('updateContactList', this.updateRemovedContacts);
+    emitter.on('updateContactList', this.updateContactList);
     emitter.on('toggleResult', this.toggleResult);
     state.contacts.forEachList(this.renderContacts);
 
