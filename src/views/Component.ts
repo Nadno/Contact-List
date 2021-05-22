@@ -7,7 +7,7 @@ export default abstract class Component<RenderReturn = HTMLElement> {
     const $el: any = document.createElement(name);
 
     if (typeof content == 'string') {
-      $el.insertAdjacentText('beforeend', content);
+      $el.insertAdjacentHTML('beforeend', content);
     } else {
       content.forEach($content =>
         $el.insertAdjacentElement('beforeend', $content)
