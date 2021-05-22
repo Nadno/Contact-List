@@ -1,10 +1,10 @@
 import Render from './views/Render';
 import Router from './controllers/Router';
-import Observer from './controllers/Emitter';
+import Emitter from './controllers/Emitter';
 
-import ContactList from './models/ContactList';
-import StringUtil from './utils/StringUtil';
+import NotifyList from './views/Feedback/Notifies';
 import importPageComponent from './utils/importPageComponent';
+import FactoryContactActionsHandler from './views/Feedback/ContactActionsHandler/FactoryContactActionsHandler';
 
 import { IEmitter } from './controllers/Emitter/types';
 import { IContactsList } from './models/ContactList/types';
@@ -17,6 +17,7 @@ export interface AppContext<S = any> {
 
 export interface AppState {
   contacts: IContactsList;
+  notifyList: NotifyList;
 }
 
 export default class App<S = any> {
@@ -27,14 +28,18 @@ export default class App<S = any> {
   public static createApp(): App {
     const $app = document.getElementById('app') || document.body;
 
-    const emitter = new Observer();
-    const contacts = new ContactList(new StringUtil());
+    const emitter = new Emitter();
+    const notifyList = new NotifyList('notifies');
+    const contacts = FactoryContactActionsHandler.createContactList(
+      emitter,
+      notifyList
+    );
 
     const router = new Router(location, emitter);
     $app.addEventListener('click', router.handleLinkClick);
 
     const context = {
-      state: { contacts },
+      state: { contacts, notifyList },
       emitter,
       router,
     };
