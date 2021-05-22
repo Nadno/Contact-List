@@ -124,6 +124,18 @@ export default class ContactOptions {
     this.turnSettingsOff();
   };
 
+  protected handleFocusout = ({ target }: Event) => {
+    const $option = (target as HTMLElement).parentNode as HTMLElement;
+
+    const isLastItem = !$option.nextSibling;
+    if (isLastItem) this.turnSettingsOff();
+  };
+
+  protected handleScape = ({ code }: KeyboardEvent) => {
+    if (code !== 'Escape') return;
+    this.turnSettingsOff();
+  };
+
   public focus(): void {
     if (!this.$optionPosition) return;
 
