@@ -9,11 +9,11 @@ import { IContactListEmitter } from '../../../models/ContactListEmitter';
 export default class ContactActionsHandler {
   constructor(
     private emitter: IEmitter,
-    private notifies: NotifyList,
+    private notifyList: NotifyList,
     private contacts: IContactListEmitter
   ) {}
 
-  public handleCreate = (contact: IListNode<IContact>): void => {
+  protected createDefaultButtons(): HTMLButtonElement[] {
     const $okBtn = Component.createElement('button', 'Ok', {
       className: 'button',
     });
@@ -22,24 +22,44 @@ export default class ContactActionsHandler {
       className: 'button --red',
     });
 
-    const { name } = contact.value;
+    return [$okBtn, $undoBtn];
+  }
 
-    const undoCreateContact = () => {
-      if (!contact) return;
+  protected createHandler(
+    message: (contact: IListNode<IContact>) => string,
+    undoFn: (this: this, contact: IListNode<IContact>) => any
+  ): (contact: IListNode<IContact>) => any {
+    return (contact: IListNode<IContact>) => {
+      const buttons = this.createDefaultButtons();
 
-      const letterKey = this.contacts.getLetterKey(name);
-      this.contacts.deleteContact(letterKey, contact, false);
-      this.emitter.emit('updateContactList', { letterKey });
+      const [, $undoBtn] = buttons;
+      $undoBtn.addEventListener('click', undoFn.bind(this, contact));
+
+      const { notifyList } = this;
+      notifyList.addNotify({
+        message: message(contact),
+        buttons,
+        closeFn: notifyList.clear,
+      });
     };
+  }
 
-    $undoBtn.addEventListener('click', undoCreateContact);
+  protected undoCreateContact(contact: IListNode<IContact>) {
+    if (!contact) return;
 
-    this.notifies.addNotify({
-      message: `O Contato <span class="notify__highlight">${
-        name || 'Sem nome'
+    const { name } = contact.value;
+    const { contacts, emitter } = this;
+    const letterKey = contacts.getLetterKey(name);
+
+    contacts.deleteContact(letterKey, contact, false);
+    emitter.emit('updateContactList', { letterKey });
+  }
+
+  public handleCreateContact = this.createHandler(
+    ({ value }) =>
+      `O Contato <span class="notify__highlight">${
+        value.name || 'Sem nome'
       }</span> foi criado com sucesso`,
-      buttons: [$okBtn, $undoBtn],
-      closeFn: this.notifies.clear,
-    });
-  };
+    this.undoCreateContact
+  );
 }
