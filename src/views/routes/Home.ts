@@ -24,6 +24,7 @@ export default class Home extends PageComponent {
     this.setTitle('Lista de contatos');
 
     const header = new Header(ctx);
+    ctx.emitter.on('updateResultList', header.updateResultList);
 
     this.contactList = new Contacts(ctx, {
       className: 'contacts',
@@ -128,8 +129,8 @@ export default class Home extends PageComponent {
   public unMount(): void {
     const { emitter } = this.ctx;
 
-    emitter.remove('updateContactList', this.updateRemovedContacts);
-    emitter.remove('updateContactList', this.updateContactList);
+    emitter.clear('updateResultList');
+    emitter.clear('updateContactList');
     emitter.remove('toggleResult', this.toggleResult);
   }
 
