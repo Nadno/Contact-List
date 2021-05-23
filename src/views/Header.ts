@@ -12,12 +12,10 @@ export default class Header extends Component {
   private $header: HTMLElement;
 
   public contactsResult: Contacts;
-  private scheduledSearch: NodeJS.Timeout | null = null;
+  public lastSearch: string = '';
 
   constructor(private ctx: AppContext<AppState>) {
     super();
-
-    this.handleFindContact = this.handleFindContact.bind(this);
 
     const $searchContact = this.createSearchBar();
     const $addContact = Link({
@@ -38,6 +36,7 @@ export default class Header extends Component {
     this.contactsResult = new Contacts(ctx, {
       className: 'contacts search-result',
       type: 'A',
+      id: 'contact-result',
     });
   }
 
@@ -92,13 +91,26 @@ export default class Header extends Component {
     results.forEach(renderContact);
   }
 
-  private handleFindContact(e: Event): void {
+  private handleFindContact = (e: Event): void => {
     const { value } = e.target as HTMLInputElement;
+
+    this.lastSearch = value;
     if (!value) return this.contactsResult.clearList();
 
     const { state } = this.ctx;
     this.handleContactsResult(state.contacts.findAll(value));
-  }
+  };
+
+  public updateResultList = (): void => {
+    const { state } = this.ctx;
+    
+    const $resultList = document.getElementById(
+      'contact-result'
+    ) as HTMLOListElement;
+    if (!$resultList.matches('.on')) return;
+
+    this.handleContactsResult(state.contacts.findAll(this.lastSearch));
+  };
 
   public render(): HTMLElement {
     return this.$header;
