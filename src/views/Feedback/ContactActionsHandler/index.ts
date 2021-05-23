@@ -62,4 +62,24 @@ export default class ContactActionsHandler {
       }</span> foi criado com sucesso`,
     this.undoCreateContact
   );
+
+  protected undoDeleteContact(contact: IListNode<IContact>) {
+    if (!contact) return;
+
+    const { name } = contact.value;
+    const { contacts, emitter } = this;
+    contacts.createContact(contact.value, false);
+
+    const letterKey = contacts.getLetterKey(name);
+    emitter.emit('updateContactList', { letterKey });
+    emitter.emit('updateResultList');
+  }
+
+  public handleDeleteContact = this.createHandler(
+    ({ value }) =>
+      `Contato <span class="notify__highlight">${
+        value.name || 'Sem nome'
+      }</span> excluído.`,
+    this.undoDeleteContact
+  );
 }
