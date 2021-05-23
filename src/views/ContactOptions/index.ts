@@ -2,8 +2,10 @@ import AsyncUtil from '../../utils/AsyncUtil';
 import Component from '../component';
 
 export interface ContactOptionsContext {
-  contactId: string;
-  $contact: HTMLElement;
+  contact: {
+    id: string;
+    element: HTMLElement;
+  };
   options: ContactOptions;
 }
 
@@ -51,8 +53,10 @@ export default class ContactOptions {
     this.$optionsList.innerHTML = '';
 
     const optionContext = {
-      $contact,
-      contactId: $contact.dataset.id || '',
+      contact: {
+        id: $contact.dataset.id || '',
+        element: $contact,
+      },
       options: this,
     };
 
