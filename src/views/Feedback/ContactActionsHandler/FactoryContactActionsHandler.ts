@@ -15,7 +15,8 @@ export default class FactoryContactActionsHandler {
       contactList
     );
 
-    emitter.on('contactCreated', contactActionsHandler.handleCreate);
+    emitter.on('contactCreated', contactActionsHandler.handleCreateContact);
+    emitter.on('contactDeleted', contactActionsHandler.handleDeleteContact);
 
     return contactList;
   }
