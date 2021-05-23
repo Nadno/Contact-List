@@ -27,7 +27,7 @@ export default class RemoveContact extends Component {
       'Você tem certeza de que deseja excluir este contato?'
     );
 
-    const { contactId, options } = this.optionsCtx;
+    const { contact, options } = this.optionsCtx;
     if (!isConfirmed) {
       options.focus();
       options.turnSettingsOff();
@@ -37,13 +37,17 @@ export default class RemoveContact extends Component {
     try {
       const { state, emitter } = this.app;
 
-      const [letterKey, index] = contactId.split('-');
+      const [letterKey, index] = contact.id.split('-');
 
-      state.contacts.deleteContacts({ [letterKey]: [Number(index)] });
+      const [contactNode] = state.contacts.deleteContacts({
+        [letterKey]: [Number(index)],
+      });
+      if (!contactNode) throw '';
 
       emitter.emit('updateContactList', {
         removed: { [letterKey]: [Number(index)] },
       });
+      emitter.emit('updateResultList', contact.id);
     } catch (err) {
       WarnModal.warn('Não foi possível excluir este contato!');
     }
