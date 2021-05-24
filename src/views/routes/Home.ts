@@ -72,12 +72,13 @@ export default class Home extends PageComponent {
 
   private renderContacts(
     contacts: ILinkedList<IContact>,
-    letterKey: string
+    letterKey: string,
+    sorted: boolean = false
   ): void {
     try {
       const $contactList =
         (document.getElementById(`letter-${letterKey}`) as HTMLOListElement) ||
-        this.contactList.addSubContactList(letterKey);
+        this.contactList.addSubContactList(letterKey, sorted);
 
       if (!contacts.length) return this.removeContactList(letterKey);
       $contactList.innerHTML = '';
@@ -123,7 +124,8 @@ export default class Home extends PageComponent {
     const contactList = state.contacts.getList(letterKey);
 
     if (!contactList) return this.removeContactList(letterKey);
-    this.renderContacts(contactList, letterKey);
+    const sorted = true;
+    this.renderContacts(contactList, letterKey, sorted);
   };
 
   public unMount(): void {
