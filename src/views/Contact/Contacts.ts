@@ -12,6 +12,7 @@ import { ContactAndPosition } from '../../models/ContactList/types';
 export default class Contacts extends Component {
   private settings: ContactOptions;
   private $list: HTMLElement;
+  private $nullEl: HTMLElement;
 
   constructor(app: AppContext<AppState>, attrs: Record<string, string>) {
     super();
@@ -25,16 +26,40 @@ export default class Contacts extends Component {
     const edit: ContactOption = ctx =>
       Link({
         title: 'Editar contato',
-        href: 'edit?id=' + ctx.contactId,
+        href: 'edit?id=' + ctx.contact.id,
         content: 'Editar',
         className: 'background-animation',
       });
 
     this.settings = new ContactOptions([edit, remove]);
+
+    //  Create a null element to prevent more 
+    //  conditions on insertSortSubContactList(..)
+    this.$nullEl = Component.createElement('li', '', {
+      className: 'contact-list null',
+    });
+
     this.$list = Component.createElement('ol', '', attrs);
   }
 
-  public addSubContactList(letter: string): HTMLOListElement {
+  public insertSortSubContactList(letter: string, $listItem: HTMLLIElement) {
+    const $elements = Array.from(
+      this.$list.querySelectorAll<HTMLLIElement>('.contact-list')
+    );
+
+    for (const $el of $elements) {
+      const { letter: letterKey } = $el.dataset;
+
+      if (!letterKey || letterKey > letter) {
+        $el.insertAdjacentElement('beforebegin', $listItem);
+        break;
+      }
+    }
+  }
+
+  public addSubContactList(
+    letter: string,
+  ): HTMLOListElement {
     const $list = Component.createElement('ol', '', {
       type: 'a',
       id: `letter-${letter}`,
@@ -77,6 +102,7 @@ export default class Contacts extends Component {
       AsyncUtil.throttle(this.settings.handleClick, triggerRateLimit)
     );
 
+    this.$list.appendChild(this.$nullEl);
     return this.$list;
   }
 }
