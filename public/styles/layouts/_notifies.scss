@@ -1,0 +1,15 @@
+@import '../components/notify';
+
+#notifies {
+  position: absolute;
+  width: 90%;
+  height: auto;
+
+  right: 1.6rem;
+  bottom: 2.4rem;
+  overflow-x: hidden;
+
+  & > *:not(:last-child) {
+    margin-bottom: 1.6rem;
+  }
+}
