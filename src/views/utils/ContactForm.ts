@@ -1,6 +1,6 @@
 import Form from './Form';
 
-import '../../../public/styles/views/contact-form.scss';
+import '../../styles/views/contact-form.scss';
 
 interface ContactFormData {
   name: string;

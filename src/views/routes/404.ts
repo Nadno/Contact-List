@@ -1,6 +1,6 @@
 import PageComponent from './PageComponent';
 
-import '../../../public/styles/views/not-found.scss';
+import '../../styles/views/not-found.scss';
 
 export default class NotFound extends PageComponent {
   constructor() {

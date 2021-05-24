@@ -7,7 +7,7 @@ import { AppContext, AppState } from './../../App';
 import { ILinkedList } from './../../models/LinkedList/types';
 import { IContact } from './../../models/ContactList/types';
 
-import '../../../public/styles/views/home.scss';
+import '../../styles/views/home.scss';
 
 interface UpdateContactList {
   letterKey?: string;

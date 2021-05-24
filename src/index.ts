@@ -1,7 +1,7 @@
 'use strict';
 
 import App from './App';
-import '../public/styles/main.scss';
+import './styles/main.scss';
 
 document.addEventListener('DOMContentLoaded', () => {
   try {

@@ -2,7 +2,7 @@ import { AppContext } from '../../../App';
 import Component from '../../component';
 import ContactPage from './ContactPage';
 
-import '../../../../public/styles/views/contact.scss';
+import '../../../styles/views/contact.scss';
 
 export default class Contact extends ContactPage {
   private elements: HTMLElement[] = [];
