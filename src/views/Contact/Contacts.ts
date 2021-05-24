@@ -59,6 +59,7 @@ export default class Contacts extends Component {
 
   public addSubContactList(
     letter: string,
+    sorted: boolean = false
   ): HTMLOListElement {
     const $list = Component.createElement('ol', '', {
       type: 'a',
@@ -69,12 +70,17 @@ export default class Contacts extends Component {
       className: 'contact-list__label',
     });
 
-    this.$list.appendChild(
-      Component.createElement('li', [$listLabel, $list], {
-        className: 'contact-list',
-      })
-    );
+    const $listItem = Component.createElement('li', [$listLabel, $list], {
+      className: 'contact-list',
+      'data-letter': letter,
+    });
 
+    if (sorted) {
+      this.insertSortSubContactList(letter, $listItem);
+      return $list;
+    }
+
+    this.$nullEl.insertAdjacentElement('beforebegin', $listItem);
     return $list;
   }
 
