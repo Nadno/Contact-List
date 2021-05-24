@@ -13,7 +13,7 @@ import {
 const SORT_FUNCTION = (a: IContact, b: IContact) => a.name < b.name;
 
 export default class ContactList implements IContactsList {
-  public static readonly ALPHABET_KEYS = 'abcdefghijklmnopqtrsuvwxyz';
+  public static readonly ALPHABET_KEYS = 'abcdefghijklmnopqrstuvwxyz';
   public static readonly especialKey = '#';
 
   private lists: Record<string, LinkedList<IContact>> = {};
