@@ -6,18 +6,16 @@ import { IEmitter } from '../Emitter/types';
 export default class Router implements IRouter {
   private routes: Array<Route> = [];
 
-  constructor(private location: Location, private emitter: IEmitter) {
-    this.handleLinkClick = this.handleLinkClick.bind(this);
-  }
+  constructor(private location: Location, private emitter: IEmitter) {}
 
-  public handleLinkClick(e: Event) {
+  public handleLinkClick = (e: Event) => {
     const target = e.target as HTMLAnchorElement;
 
     if (target.matches('[data-link]')) {
       e.preventDefault();
       this.goTo(target.href);
     }
-  }
+  };
 
   public getParams(): Record<string, string> {
     let result: Record<string, string> = {};
