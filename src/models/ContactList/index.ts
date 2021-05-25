@@ -92,20 +92,24 @@ export default class ContactList implements IContactsList {
     data: Partial<IContact>,
     { letterKey, index }: ContactPosition
   ): IListNode<IContact> | undefined {
-    try {
-      const list = this.lists[letterKey];
-      const contact = list.at(index);
+    const list = this.lists[letterKey];
 
-      if (!contact) throw new Error('Contact not found');
-      const newContact = Object.assign(contact.value, data);
+    const contact = list.at(index);
+    if (!contact) throw new Error('Contact not found');
 
+    const isNewName = data.name && data.name !== contact.value.name;
+    if (isNewName) {
       const deletedContact = this.deleteContact(letterKey, contact);
       if (!deletedContact) return;
 
-      return this.createContact(newContact);
-    } catch (err) {
-      console.error(err);
+      const newContact = Object.assign({}, { ...contact.value, ...data });
+      this.createContact(newContact);
+
+      return deletedContact;
     }
+
+    Object.assign(contact.value, data);
+    return contact;
   }
 
   public createContact(contact: IContact): IListNode<IContact> | undefined {
