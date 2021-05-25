@@ -122,6 +122,11 @@ export default class ContactList implements IContactsList {
     return this.lists[letterKey].insertSort(contact, SORT_FUNCTION);
   }
 
+  public addContacts(...contacts: IContact[]): void {
+    if (!contacts) return;
+    contacts.forEach(contact => this.createContact(contact));
+  }
+
   public deleteContact(
     letterKey: string,
     contact: IListNode<IContact>
