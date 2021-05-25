@@ -42,7 +42,7 @@ export default abstract class Dialog {
       `[data-type=${queryType}]`
     );
 
-    if (!result) throw new Error('Element not founded');
+    if (!result) throw new Error('Element not found');
     return result;
   }
 
