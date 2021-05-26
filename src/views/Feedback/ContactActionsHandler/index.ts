@@ -5,6 +5,9 @@ import { IEmitter } from '../../../controllers/Emitter/types';
 import { IContact } from '../../../models/ContactList/types';
 import { IListNode } from '../../../models/LinkedList/types';
 import { IContactListEmitter } from '../../../models/ContactListEmitter';
+import Link from '../../../controllers/Link';
+
+const EMITTER_OFF = false;
 
 export default class ContactActionsHandler {
   constructor(
@@ -51,7 +54,7 @@ export default class ContactActionsHandler {
     const { contacts, emitter } = this;
     const letterKey = contacts.getLetterKey(name);
 
-    contacts.deleteContact(letterKey, contact, false);
+    contacts.deleteContact(letterKey, contact, EMITTER_OFF);
     emitter.emit('updateContactList', { letterKey });
   }
 
@@ -59,16 +62,23 @@ export default class ContactActionsHandler {
     ({ value }) =>
       `O Contato <span class="notify__highlight">${
         value.name || 'Sem nome'
-      }</span> foi criado com sucesso`,
+      }</span> foi criado.`,
     this.undoCreateContact
   );
+
+  public handleEditContact = ({ value }: IListNode<IContact>) =>
+    this.notifyList.addNotify({
+      message: `Contato <span class="notify__highlight">${
+        value.name || 'Sem nome'
+      }</span> editado.`,
+    });
 
   protected undoDeleteContact(contact: IListNode<IContact>) {
     if (!contact) return;
 
     const { name } = contact.value;
     const { contacts, emitter } = this;
-    contacts.createContact(contact.value, false);
+    contacts.createContact(contact.value, EMITTER_OFF);
 
     const letterKey = contacts.getLetterKey(name);
     emitter.emit('updateContactList', { letterKey });
