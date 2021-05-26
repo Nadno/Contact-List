@@ -5,7 +5,6 @@ import WarnModal from '../../Feedback/Modal/Warn';
 import { AppContext, AppState } from '../../../App';
 
 export default class EditContact extends ContactPage {
-  private $element: HTMLElement;
   private formData: Record<string, string>;
 
   constructor(ctx: AppContext<AppState>) {
@@ -23,7 +22,7 @@ export default class EditContact extends ContactPage {
     });
 
     this.formData = data;
-    this.$element = formElement;
+    this.$element.appendChild(formElement);
   }
 
   private handleSubmit(e: Event) {
@@ -40,8 +39,6 @@ export default class EditContact extends ContactPage {
         letterKey,
         index: Number(index),
       });
-
-      WarnModal.warn('As alterações foram salvas com sucesso!', router.goBack);
     }
   }
 

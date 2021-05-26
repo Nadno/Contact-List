@@ -5,8 +5,6 @@ import ContactPage from './ContactPage';
 import '../../../styles/views/contact.scss';
 
 export default class Contact extends ContactPage {
-  private elements: HTMLElement[] = [];
-
   constructor(ctx: AppContext) {
     super(ctx);
 
@@ -34,7 +32,7 @@ export default class Contact extends ContactPage {
       `
     );
 
-    this.elements.push($div);
+    this.$element.appendChild($div);
   }
 
   public splitTel(tel: string) {
@@ -43,6 +41,6 @@ export default class Contact extends ContactPage {
   }
 
   public render(): HTMLElement[] {
-    return this.elements;
+    return [this.$element];
   }
 }
