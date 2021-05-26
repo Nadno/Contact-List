@@ -15,14 +15,14 @@
   position: fixed;
   width: 100%;
   max-width: 35ch;
-  padding: 2rem;
+  padding: 4.8rem 1.6rem 1.6rem;
 
   border-radius: 0.4rem;
   background-color: #fff;
   font-size: var(--fs-16);
   line-height: var(--lh-16);
 
-  box-shadow: 1px 1px 4px var(--tertiary-color);
+  box-shadow: 1px 1px 4px var(--tertiary-clr);
 
   z-index: 100;
 
@@ -34,12 +34,12 @@
   hr {
     height: 0.5px;
     border: none;
-    background-color: var(--secondary-color);
+    background-color: var(--quaternary-clr);
   }
 
   &__content {
     text-align: center;
-    color: var(--tertiary-color);
+    color: var(--tertiary-clr);
     margin-bottom: 2rem;
   }
 
