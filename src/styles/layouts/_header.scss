@@ -7,7 +7,7 @@
   align-items: center;
 
   background-color: #fff;
-  border-bottom: 1px solid var(--primary-color);
+  border-bottom: 1px solid var(--quaternary-clr);
 
   top: 0;
   right: 0;
@@ -15,16 +15,13 @@
   z-index: 100;
 
   &__add-contact {
-    display: block;
     width: 5rem;
     height: 100%;
 
     display: flex;
     justify-content: center;
     align-items: center;
-
-    font-weight: bold;
-    font-size: var(--fs-24);
+    font-size: var(--fs-16);
   }
 }
 
@@ -36,16 +33,16 @@
   font-size: var(--fs-16);
 
   border: none;
-  border-left: 1px solid var(--primary-color);
-  border-right: 1px solid var(--primary-color);
+  border-left: 1px solid var(--quaternary-clr);
+  border-right: 1px solid var(--quaternary-clr);
 
   &__close {
     cursor: pointer;
     width: 0;
     border: none;
-
-    font-weight: bold;
-    color: var(--tertiary-color);
+    
+    font-size: var(--fs-16);
+    color: var(--tertiary-clr);
     background-color: initial;
     pointer-events: none;
 
