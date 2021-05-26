@@ -1,11 +1,18 @@
 import { AppContext, AppState } from '../../../App';
 import { IContact } from '../../../models/ContactList/types';
+import Component from '../../component';
 
 import PageComponent from '../PageComponent';
 
+import '../../../styles/views/contact-page.scss';
 export default abstract class ContactPage extends PageComponent {
+  protected $element: HTMLElement = Component.createElement('div', '', {
+    className: 'contact-page',
+  });
+
   constructor(protected ctx: AppContext<AppState>) {
     super();
+    this.$element.appendChild(this.backButton());
   }
 
   protected getContact(): IContact {
@@ -22,5 +29,16 @@ export default abstract class ContactPage extends PageComponent {
 
     Object.assign(result, contact.value);
     return result;
+  }
+
+  protected backButton(): HTMLButtonElement {
+    const $btn = Component.createElement(
+      'button',
+      `<i class="fas fa-arrow-left"></i>`,
+      { className: 'back-button' }
+    );
+    $btn.addEventListener('click', this.ctx.router.goBack);
+
+    return $btn;
   }
 }
