@@ -48,7 +48,7 @@ export default abstract class Dialog {
 
   public createCloseBtn(closeFn?: Function): this {
     const $close = Component.createElement('button', 'x', {
-      className: 'notify__close',
+      className: 'close-btn',
     });
 
     const closeNotify = () => {
