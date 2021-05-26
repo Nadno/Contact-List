@@ -16,7 +16,9 @@ export default class ConfirmModal extends Modal {
   private $reject: HTMLButtonElement;
 
   constructor(private where: HTMLElement = Modal.$where) {
-    super('--confirm-modal');
+    super({
+      className: '--confirm-modal',
+    });
 
     this.$confirm = Component.createElement('button', 'Sim', {
       className: 'button modal__button',

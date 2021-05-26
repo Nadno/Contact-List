@@ -19,7 +19,9 @@ export default class WarnModal extends Modal {
     private where: HTMLElement = Modal.$where,
     private okAction?: Function
   ) {
-    super('--warn-modal');
+    super({
+      className: '--warn-modal',
+    });
 
     this.$ok = Component.createElement('button', 'OK', {
       className: 'button modal__button',
