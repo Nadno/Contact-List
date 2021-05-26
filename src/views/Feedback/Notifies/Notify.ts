@@ -26,6 +26,8 @@ export default class Notify extends Dialog {
         notify.addButton(button);
       buttons.forEach(appendButton);
     }
+    
+    notify.createCloseBtn(closeFn);
     where.appendChild(notify.build());
 
     await AsyncUtil.sleep(150);
