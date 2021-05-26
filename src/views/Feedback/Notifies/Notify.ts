@@ -54,23 +54,38 @@ export default class Notify extends Dialog {
       className: 'notify__content',
     });
 
+    this.addElement($content, 'content');
+  }
+
+  public createButtonsContainer(): this {
     const $buttons = Component.createElement('div', '', {
       className: 'notify__buttons',
     });
-
-    this.addElement($content, 'content');
     this.addElement($buttons, 'buttons');
-    this.createCloseBtn(closeFn);
-  }
-
-  public addButton(button: HTMLButtonElement): this {
-    const $buttons = this.getElementByType('buttons');
-
-    const unbuild = () => this.unbuild();
-    button.addEventListener('click', unbuild);
-    $buttons.appendChild(button);
 
     return this;
+  }
+
+  public addButton(
+    button: HTMLButtonElement | HTMLAnchorElement,
+    callAgain: boolean = true
+  ): this {
+    try {
+      const $buttons = this.getElementByType('buttons');
+
+      const unbuild = () => this.unbuild();
+      button.addEventListener('click', unbuild);
+      $buttons.appendChild(button);
+    } catch (err) {
+      if (callAgain) {
+        this.createButtonsContainer();
+        this.addButton(button, false);
+      } else {
+        console.error(err);
+      }
+    } finally {
+      return this;
+    }
   }
 
   public animate(): void {
