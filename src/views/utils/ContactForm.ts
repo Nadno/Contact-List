@@ -1,6 +1,6 @@
 import Form from './Form';
 
-import '../../styles/views/contact-form.scss';
+import '../../styles/layouts/contact-form.scss';
 
 interface ContactFormData {
   name: string;
@@ -33,13 +33,13 @@ export default class ContactForm {
         {
           id: 'name',
           name: 'name',
-          label: 'Nome',
+          label: 'Nome:',
           placeholder: 'Nome',
         },
         {
           id: 'tel',
           name: 'tel',
-          label: 'Número de telefone',
+          label: 'Número de telefone:',
           placeholder: 'ex.: 912345678',
         },
       ])
