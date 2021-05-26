@@ -5,13 +5,12 @@ import Dialog from '../Dialog';
 export interface NotifyConstructor {
   message: string | HTMLElement[];
   willUnbuild?: Function;
-  closeFn?: Function;
 }
 
 export interface NotifyComponents extends Pick<NotifyConstructor, 'message'> {
   where: HTMLElement;
   closeFn?: Function;
-  buttons?: HTMLButtonElement[];
+  buttons?: Array<HTMLButtonElement | HTMLAnchorElement>;
 }
 
 export default class Notify extends Dialog {
@@ -19,10 +18,11 @@ export default class Notify extends Dialog {
     { where, message, buttons, closeFn }: NotifyComponents,
     willUnbuild?: Function
   ): Promise<void> {
-    const notify = new Notify({ message, closeFn, willUnbuild });
+    const notify = new Notify({ message, willUnbuild });
 
     if (buttons) {
-      const appendButton = (button: HTMLButtonElement) =>
+      notify.createButtonsContainer();
+      const appendButton = (button: HTMLButtonElement | HTMLAnchorElement) =>
         notify.addButton(button);
       buttons.forEach(appendButton);
     }
@@ -33,14 +33,14 @@ export default class Notify extends Dialog {
 
     const tenSeconds = 10 * 1000;
     await AsyncUtil.sleep(tenSeconds);
-    
-    notify.unbuild()
+
+    notify.unbuild();
   }
 
   public $notify: HTMLElement;
   protected willUnbuild?: Function;
 
-  constructor({ message, closeFn, willUnbuild }: NotifyConstructor) {
+  constructor({ message, willUnbuild }: NotifyConstructor) {
     super('$notify');
     this.willUnbuild = willUnbuild;
 
