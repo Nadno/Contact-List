@@ -11,12 +11,18 @@ class Modal extends PopUp {
   public $modal: HTMLElement;
   private $container: HTMLElement;
 
-  constructor(className: string) {
+  constructor({ className = '', ...attrs }: Record<string, string>) {
     super('$modal');
 
     this.$modal = Component.createElement('div', '', {
-      className: 'modal ' + className,
+      ...attrs,
+      className: 'modal',
     });
+
+    if (className) {
+      const classNames = className.trim().split(' ');
+      classNames.forEach(className => this.$modal.classList.add(className));
+    }
 
     this.$container = Component.createElement('div', [this.$modal], {
       className: 'modal-overlay',
@@ -28,6 +34,7 @@ class Modal extends PopUp {
   }
 
   public build(): HTMLElement {
+    this.createCloseBtn();
     return this.$container;
   }
 }
