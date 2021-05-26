@@ -97,8 +97,13 @@ export default class Notify extends Dialog {
       const target = e.target as HTMLElement;
       if (!target.matches('.notify')) return;
 
-      const $firstEl = this.getElementByType('buttons').querySelector('button');
-      if ($firstEl) $firstEl.focus();
+      try {
+        const $firstEl =
+          this.getElementByType('buttons').querySelector('button');
+        if ($firstEl) $firstEl.focus();
+      } catch {
+        this.getElementByType('close').focus();
+      }
 
       this.$notify.removeEventListener('transitionend', autoFocus);
     };
