@@ -19,9 +19,9 @@ export default class Header extends Component {
 
     const $searchContact = this.createSearchBar();
     const $addContact = Link({
-      title: 'Criar contato',
+      title: 'Adicionar contato',
       href: '/create',
-      content: '+',
+      content: '<i class="fas fa-user-plus"></i>',
       className: 'header__add-contact background-animation',
     });
 
@@ -49,9 +49,13 @@ export default class Header extends Component {
       placeholder: 'Encontrar contato',
     });
 
-    const $closeSearch = Component.createElement('button', 'X', {
-      className: 'search__close ',
-    });
+    const $closeSearch = Component.createElement(
+      'button',
+      '<i class="fas fa-arrow-left"></i>',
+      {
+        className: 'search__close ',
+      }
+    );
 
     const $searchBar = Component.createElement(
       'form',
@@ -103,7 +107,7 @@ export default class Header extends Component {
 
   public updateResultList = (): void => {
     const { state } = this.ctx;
-    
+
     const $resultList = document.getElementById(
       'contact-result'
     ) as HTMLOListElement;
