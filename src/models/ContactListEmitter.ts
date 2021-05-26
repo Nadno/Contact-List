@@ -20,7 +20,6 @@ export interface IContactListEmitter extends IContactsList {
     contact: IContact,
     emit?: boolean
   ): IListNode<IContact> | undefined;
-
   deleteContact(
     letterKey: string,
     contact: IListNode<IContact>,
@@ -32,14 +31,21 @@ export default class ContactListEmitter
   extends ContactList
   implements IContactListEmitter
 {
-  constructor(private emitter: IEmitter, stringUtil: StringUtil) {
+  protected emitState = true;
+
+  constructor(
+    private emitter: IEmitter,
+    stringUtil: StringUtil,
+    contacts?: IContact[]
+  ) {
     super(stringUtil);
+    if (contacts) this.addContacts(...contacts);
   }
 
   public editContact(
     data: Partial<IContact>,
     pos: ContactPosition,
-    emit: boolean = true
+    emit: boolean = this.emitState
   ): IListNode<IContact> | undefined {
     const result = super.editContact(data, pos);
     emit && this.emitter.emit('contactEdited', result);
@@ -48,28 +54,25 @@ export default class ContactListEmitter
 
   public createContact(
     contact: IContact,
-    emit: boolean = true
+    emit: boolean = this.emitState
   ): IListNode<IContact> | undefined {
     const result = super.createContact(contact);
     emit && this.emitter.emit('contactCreated', result);
     return result;
   }
 
+  public addContacts(...contacts: IContact[]): void {
+    this.emitState = false;
+    super.addContacts(...contacts);
+    this.emitState = true;
+  }
+
   public deleteContact(
     letterKey: string,
     contact: IListNode<IContact>,
-    emit: boolean = true
+    emit: boolean = this.emitState
   ): IListNode<IContact> | undefined {
     const result = super.deleteContact(letterKey, contact);
-    emit && this.emitter.emit('contactDeleted', result);
-    return result;
-  }
-
-  public deleteContacts(
-    contactsMap: ContactPositions,
-    emit: boolean = true
-  ): IListNode<IContact>[] {
-    const result = super.deleteContacts(contactsMap);
     emit && this.emitter.emit('contactDeleted', result);
     return result;
   }
