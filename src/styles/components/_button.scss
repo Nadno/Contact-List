@@ -1,16 +1,16 @@
-.button {
+%button {
   all: unset;
 
   cursor: pointer;
-  width: 6.4rem;
-  height: 3.2rem;
-  text-align: center;
-  border-radius: 0.4rem;
-  color: var(--tertiary-color);
-  border: 1px solid var(--secondary-color);
-  background-color: var(--primary-color);
 
-  transition: opacity 200ms ease-in-out, transform 200ms ease;
+  height: 3.2rem;
+  font-size: var(--fs-16);
+  padding: 0.4rem 0.8rem;
+  color: var(--tertiary-clr);
+
+  display: grid;
+  justify-content: center;
+  align-items: center;
 
   @media (hover) {
     &:hover {
@@ -19,21 +19,31 @@
   }
 
   &:focus {
-    outline: 1px solid var(--tertiary-color);
+    outline: 0.25rem solid var(--tertiary-clr);
     outline-offset: 4px;
   }
 
   &:active {
     transform: scale(0.95);
   }
+}
+
+.button {
+  @extend %button;
+  min-width: 7.2rem;
+  border-radius: 0.4rem;
+  border: 1px solid var(--tertiary-clr);
+  background-color: var(--secondary-clr);
+
+  transition: opacity 200ms ease-in-out, transform 200ms ease;
 
   &.--red {
-    color: var(--bg-color);
-    background-color: tomato;
+    color: var(--secondary-clr);
+    background-color: var(--cancel-clr);
     border: 1px solid rgb(196, 75, 53);
 
     &:focus {
-      outline-color: tomato;
+      outline-color: var(--cancel-clr);
     }
   }
 }
