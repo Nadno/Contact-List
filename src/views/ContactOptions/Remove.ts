@@ -23,9 +23,10 @@ export default class RemoveContact extends Component {
   }
 
   private async handleConfirmRemoveContact(): Promise<void> {
-    const isConfirmed = await ConfirmModal.confirm(
-      'Você tem certeza de que deseja excluir este contato?'
-    );
+    const isConfirmed = await ConfirmModal.confirm({
+      title: 'Excluir contato',
+      message: 'Você tem certeza de que deseja excluir este contato?',
+    });
 
     const { contact, options } = this.optionsCtx;
     if (!isConfirmed) {
@@ -48,8 +49,11 @@ export default class RemoveContact extends Component {
         removed: { [letterKey]: [Number(index)] },
       });
       emitter.emit('updateResultList', contact.id);
-    } catch (err) {
-      WarnModal.warn('Não foi possível excluir este contato!');
+    } catch {
+      WarnModal.warn({
+        title: 'Erro ao excluir',
+        message: 'Não foi possível excluir este contato!',
+      });
     }
   }
 
