@@ -26,10 +26,15 @@ export default class Home extends PageComponent {
     const header = new Header(ctx);
     ctx.emitter.on('updateResultList', header.updateResultList);
 
-    this.contactList = new Contacts(ctx, {
-      className: 'contacts',
-      type: 'A',
-    });
+    const useNullElement = true;
+    this.contactList = new Contacts(
+      ctx,
+      {
+        className: 'contacts',
+        type: 'A',
+      },
+      useNullElement
+    );
 
     const $header = header.render();
     const $contactList = this.contactList.render();
