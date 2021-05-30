@@ -2,13 +2,17 @@ import Component from '../../component';
 import Modal from '.';
 import ModalTemplate from './ModalTemplate';
 
+export interface IConfirm {
+  message: string;
+  title: string;
+  where?: HTMLElement;
+}
+
 export default class ConfirmModal extends Modal {
-  public static confirm(
-    message: string,
-    where?: HTMLElement
-  ): Promise<boolean> {
-    return ModalTemplate.defaultTemplate(new ConfirmModal(where))
+  public static confirm({ message, title, where }: IConfirm): Promise<boolean> {
+    return ModalTemplate(new ConfirmModal(where))
       .setMessage(message)
+      .setTitle(title)
       .showModal();
   }
 
@@ -29,17 +33,14 @@ export default class ConfirmModal extends Modal {
     });
   }
 
-  public setMessage(message: string): this {
-    this.getElementByType('content').textContent = message;
-    return this;
-  }
-
   public confirm(): Promise<boolean> {
     const { $confirm, $reject } = this;
 
     const handleButtons = (
       resolve: (answer: boolean | Promise<boolean>) => any
     ) => {
+      this.createCloseBtn(() => resolve(false));
+
       const handleReject = () => {
         this.unbuild();
         resolve(false);

@@ -2,14 +2,18 @@ import Component from '../../component';
 import Modal from '.';
 import ModalTemplate from './ModalTemplate';
 
+export interface IWarn {
+  message: string;
+  title: string;
+  action?: Function;
+  where?: HTMLElement;
+}
+
 export default class WarnModal extends Modal {
-  public static warn(
-    message: string,
-    action?: Function,
-    where?: HTMLElement
-  ): void {
-    ModalTemplate.defaultTemplate(new WarnModal(where, action))
+  public static warn({ message, title, action, where }: IWarn): void {
+    ModalTemplate(new WarnModal(where, action))
       .setMessage(message)
+      .setTitle(title)
       .showModal();
   }
 
@@ -26,11 +30,6 @@ export default class WarnModal extends Modal {
     this.$ok = Component.createElement('button', 'OK', {
       className: 'button modal__button',
     });
-  }
-
-  public setMessage(message: string): this {
-    this.getElementByType('content').textContent = message;
-    return this;
   }
 
   public warn(): void {
@@ -50,6 +49,7 @@ export default class WarnModal extends Modal {
     const { $ok } = this;
     $buttons.appendChild($ok);
 
+    this.createCloseBtn();
     return super.build();
   }
 
