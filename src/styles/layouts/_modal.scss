@@ -37,6 +37,17 @@
     background-color: var(--quaternary-clr);
   }
 
+  &__title {
+    font-size: 2.4rem;
+    line-height: var(--lh-24);
+    margin-bottom: 1.6rem;
+  }
+
+  &__content {
+    margin-bottom: 2.4rem;
+  }
+
+  &__title,
   &__content {
     text-align: center;
     color: var(--tertiary-clr);
