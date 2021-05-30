@@ -2,12 +2,11 @@ import Component from '../../component';
 import PopUp from '../Dialog';
 
 class Modal extends PopUp {
-  public static $where: HTMLElement;
-
   public static setStaticWhereElement(where: HTMLElement): void {
     Modal.$where = where;
   }
 
+  public static $where: HTMLElement;
   public $modal: HTMLElement;
   private $container: HTMLElement;
 
@@ -34,7 +33,6 @@ class Modal extends PopUp {
   }
 
   public build(): HTMLElement {
-    this.createCloseBtn();
     return this.$container;
   }
 }
