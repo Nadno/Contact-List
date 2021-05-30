@@ -47,3 +47,15 @@
     }
   }
 }
+
+.back-button {
+  @extend %button;
+  border: none;
+  color: var(--cancel-clr);
+  font-size: var(--fs-24);
+  background-color: initial;
+
+  &:focus {
+    outline-color: var(--cancel-clr);
+  }
+}
