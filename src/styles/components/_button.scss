@@ -59,3 +59,24 @@
     outline-color: var(--cancel-clr);
   }
 }
+
+.close-btn {
+  cursor: pointer;
+  position: absolute;
+  width: 2.4rem;
+  height: 2.4rem;
+  border: none;
+  background-color: var(--cancel-clr);
+  font-size: var(--fs-16);
+  font-weight: bold;
+  color: var(--secondary-clr);
+  top: 0.8rem;
+  right: 0.8rem;
+
+  @media (hover) {
+    transition: opacity 500ms ease;
+    &:hover {
+      opacity: 0.75;
+    }
+  }
+}
