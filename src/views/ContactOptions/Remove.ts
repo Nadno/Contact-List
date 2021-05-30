@@ -37,16 +37,15 @@ export default class RemoveContact extends Component {
 
     try {
       const { state, emitter } = this.app;
-
-      const [letterKey, index] = contact.id.split('-');
-
+      const { letter: letterKey, index } = options.query.splitId(contact.id);
       const [contactNode] = state.contacts.deleteContacts({
-        [letterKey]: [Number(index)],
+        [letterKey]: [index],
       });
+
       if (!contactNode) throw '';
 
       emitter.emit('updateContactList', {
-        removed: { [letterKey]: [Number(index)] },
+        removed: { [letterKey]: [index] },
       });
       emitter.emit('updateResultList', contact.id);
     } catch {
