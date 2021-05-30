@@ -4,6 +4,7 @@ interface ContactId {
 }
 
 export interface ISelectContactList {
+  $self: HTMLElement;
   splitId(id: string): ContactId;
   selectContact(id: string, child?: string): HTMLElement;
   selectSubList(id: string, isContactId?: boolean): HTMLElement | null;
