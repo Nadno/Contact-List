@@ -5,12 +5,15 @@ import ContactOptions, { ContactOption } from '../ContactOptions/index';
 import RemoveContact from '../ContactOptions/Remove';
 import Link from '../../controllers/Link';
 import AsyncUtil from '../../utils/AsyncUtil';
+import SelectContactList from '../utils/SelectContactList';
 
 import { AppContext, AppState } from '../../App';
 import { ContactAndPosition } from '../../models/ContactList/types';
 
 export default class Contacts extends Component {
+  public query: SelectContactList;
   private settings: ContactOptions;
+
   private $list: HTMLElement;
   private $nullEl: HTMLElement;
 
@@ -31,13 +34,10 @@ export default class Contacts extends Component {
         className: 'background-animation',
       });
 
-    this.settings = new ContactOptions([edit, remove]);
+    this.$list = Component.createElement('ol', '', attrs);
+    this.query = new SelectContactList(this.$list as HTMLOListElement);
 
-    //  Create a null element to prevent more 
-    //  conditions on insertSortSubContactList(..)
-    this.$nullEl = Component.createElement('li', '', {
-      className: 'contact-list null',
-    });
+    this.settings = new ContactOptions([edit, remove], this.query);
 
     this.$list = Component.createElement('ol', '', attrs);
   }
