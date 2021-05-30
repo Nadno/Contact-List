@@ -1,5 +1,6 @@
 import AsyncUtil from '../../utils/AsyncUtil';
 import Component from '../component';
+import { ISelectContactList } from '../utils/SelectContactList';
 
 export interface ContactOptionsContext {
   contact: {
@@ -16,7 +17,12 @@ export default class ContactOptions {
   private $optionsList: HTMLElement;
   private $optionPosition: HTMLElement | null = null;
 
-  constructor(private options: Array<ContactOption>) {
+  private contactId: string = '';
+
+  constructor(
+    private options: Array<ContactOption>,
+    public query: ISelectContactList
+  ) {
     this.$options = Component.createElement('div', '', {
       className: 'options',
     });
@@ -54,7 +60,7 @@ export default class ContactOptions {
 
     const optionContext = {
       contact: {
-        id: $contact.dataset.id || '',
+        id: this.contactId,
         element: $contact,
       },
       options: this,
@@ -88,7 +94,10 @@ export default class ContactOptions {
       to.appendChild(this.$options);
 
       const $contact = this.$options.closest<HTMLElement>('.contact');
-      if ($contact) this.renderOptions($contact);
+      if ($contact) {
+        this.contactId = $contact.dataset.id || '';
+        this.renderOptions($contact);
+      }
     }
   }
 
@@ -129,11 +138,13 @@ export default class ContactOptions {
   };
 
   public focus(): void {
-    if (!this.$optionPosition) return;
+    if (!this.contactId) return;
 
-    const $btn =
-      this.$optionPosition.querySelector<HTMLElement>('.options-button');
-    if ($btn) $btn.focus();
+    try {
+      this.query.selectContact(this.contactId, '.options-button').focus();
+    } catch (err) {
+      console.error(err);
+    }
   }
 
   public handleClick = ({ target }: MouseEvent): void => {
