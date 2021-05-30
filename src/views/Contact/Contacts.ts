@@ -5,13 +5,13 @@ import ContactOptions, { ContactOption } from '../ContactOptions/index';
 import RemoveContact from '../ContactOptions/Remove';
 import Link from '../../controllers/Link';
 import AsyncUtil from '../../utils/AsyncUtil';
-import SelectContactList from '../utils/SelectContactList';
+import SelectContactList, { ISelectContactList } from '../utils/SelectContactList';
 
 import { AppContext, AppState } from '../../App';
 import { ContactAndPosition } from '../../models/ContactList/types';
 
 export default class Contacts extends Component {
-  public query: SelectContactList;
+  public query: ISelectContactList;
   private settings: ContactOptions;
 
   private $list: HTMLElement;
