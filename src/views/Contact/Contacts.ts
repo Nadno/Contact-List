@@ -15,9 +15,13 @@ export default class Contacts extends Component {
   private settings: ContactOptions;
 
   private $list: HTMLElement;
-  private $nullEl: HTMLElement;
+  private $nullEl?: HTMLElement;
 
-  constructor(app: AppContext<AppState>, attrs: Record<string, string>) {
+  constructor(
+    app: AppContext<AppState>,
+    attrs: Record<string, string>,
+    nullElement: boolean = false
+  ) {
     super();
 
     const remove: ContactOption = ctx =>
@@ -39,7 +43,14 @@ export default class Contacts extends Component {
 
     this.settings = new ContactOptions([edit, remove], this.query);
 
-    this.$list = Component.createElement('ol', '', attrs);
+    //  Create a null element to prevent more
+    //  conditions on insertSortSubContactList(..)
+    if (nullElement) {
+      this.$nullEl = Component.createElement('li', '', {
+        className: 'contact-list null',
+      });
+      this.$list.appendChild(this.$nullEl);
+    }
   }
 
   public insertSortSubContactList(letter: string, $listItem: HTMLLIElement) {
@@ -80,7 +91,8 @@ export default class Contacts extends Component {
       return $list;
     }
 
-    this.$nullEl.insertAdjacentElement('beforebegin', $listItem);
+    if (this.$nullEl)
+      this.$nullEl.insertAdjacentElement('beforebegin', $listItem);
     return $list;
   }
 
@@ -108,7 +120,6 @@ export default class Contacts extends Component {
       AsyncUtil.throttle(this.settings.handleClick, triggerRateLimit)
     );
 
-    this.$list.appendChild(this.$nullEl);
     return this.$list;
   }
 }
