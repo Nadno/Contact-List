@@ -104,14 +104,21 @@ export default class Header extends Component {
     results.forEach(renderContact);
   }
 
-  private handleFindContact = (e: Event): void => {
+  private search(name: string) {
+    const { state } = this.ctx;
+    this.handleContactsResult(state.contacts.findAll(name));
+  }
+
+  private searchOnChange = (e: Event): void => {
     const { value } = e.target as HTMLInputElement;
 
     this.lastSearch = value;
-    if (!value) return this.contactsResult.clearList();
 
-    const { state } = this.ctx;
-    this.handleContactsResult(state.contacts.findAll(value));
+    const isEmpty = !value;
+    const hasNumber = RegExp(/[0-9]/g).test(value);
+    if (isEmpty || hasNumber) return this.contactsResult.clearList();
+
+    this.search(value);
   };
 
   public updateResultList = (): void => {
