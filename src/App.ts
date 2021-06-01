@@ -52,8 +52,12 @@ export default class App<S = any> {
     this.setRoutes();
 
     const { router } = this.ctx;
+
     router.renderPath();
-    window.onpopstate = () => router.goTo(location.pathname);
+    window.onpopstate = (e: PopStateEvent) => {
+      e.preventDefault();
+      router.goTo(location.href);
+    };
   }
 
   private setRoutes(): void {
