@@ -7,8 +7,10 @@
   flex-direction: column;
 
   margin: auto;
+  background-color: var(--secondary-clr);
 
-  .back-button {
+  .icon-btn {
+    height: 4rem;
     align-self: flex-start;
     margin-bottom: 6.4rem;
   }
