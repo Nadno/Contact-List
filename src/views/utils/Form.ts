@@ -74,7 +74,7 @@ export default class Form<IniData extends Record<string, any>> {
   ): { formElement: HTMLFormElement; data: IniData } {
     const $submit = Component.createElement('button', submit, {
       type: 'submit',
-      className: 'button',
+      className: 'button default-btn',
     });
 
     const $fields = this.fieldset.toArray();

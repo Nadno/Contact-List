@@ -22,7 +22,7 @@ export default class Header extends Component {
       title: 'Adicionar contato',
       href: '/create',
       content: '<i class="fas fa-user-plus"></i>',
-      className: 'header__add-contact background-animation',
+      className: 'add-contact button icon-btn',
     });
 
     this.$header = Component.createElement(

@@ -25,11 +25,11 @@ export default class ConfirmModal extends Modal {
     });
 
     this.$confirm = Component.createElement('button', 'Sim', {
-      className: 'button modal__button',
+      className: 'button default-btn modal__button',
     });
 
     this.$reject = Component.createElement('button', 'Não', {
-      className: 'button modal__button --red',
+      className: 'button default-btn modal__button --red',
     });
   }
 

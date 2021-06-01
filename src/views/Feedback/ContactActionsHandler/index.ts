@@ -18,11 +18,11 @@ export default class ContactActionsHandler {
 
   protected createDefaultButtons(): HTMLButtonElement[] {
     const $okBtn = Component.createElement('button', 'Ok', {
-      className: 'button',
+      className: 'button default-btn',
     });
 
     const $undoBtn = Component.createElement('button', 'Desfazer', {
-      className: 'button --red',
+      className: 'button default-btn --red',
     });
 
     return [$okBtn, $undoBtn];

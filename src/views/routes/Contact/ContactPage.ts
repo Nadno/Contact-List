@@ -35,7 +35,7 @@ export default abstract class ContactPage extends PageComponent {
     const $btn = Component.createElement(
       'button',
       `<i class="fas fa-arrow-left"></i>`,
-      { className: 'back-button' }
+      { className: 'button icon-btn' }
     );
     $btn.addEventListener('click', this.ctx.router.goBack);
 
