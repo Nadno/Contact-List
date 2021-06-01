@@ -14,13 +14,7 @@
   left: 0;
   z-index: 100;
 
-  &__add-contact {
-    width: 5rem;
-    height: 100%;
-
-    display: flex;
-    justify-content: center;
-    align-items: center;
+  .icon-btn {
     font-size: var(--fs-16);
   }
 }
