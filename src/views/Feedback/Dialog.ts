@@ -1,4 +1,4 @@
-import Component from "../component";
+import Component from '../component';
 
 export default abstract class Dialog {
   protected mainElementPropertyName: string;
@@ -47,9 +47,13 @@ export default abstract class Dialog {
   }
 
   public createCloseBtn(closeFn?: Function): this {
-    const $close = Component.createElement('button', 'x', {
-      className: 'close-btn',
-    });
+    const $close = Component.createElement(
+      'button',
+      '<i class="fas fa-times open"></i>',
+      {
+        className: 'close-btn',
+      }
+    );
 
     const closeNotify = () => {
       closeFn && closeFn();
