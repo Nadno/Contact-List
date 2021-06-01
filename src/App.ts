@@ -36,7 +36,7 @@ export default class App<S = any> {
     );
 
     const router = new Router(location, emitter);
-    $app.addEventListener('click', router.handleLinkClick);
+    document.body.addEventListener('click', router.handleLinkClick);
 
     const context = {
       state: { contacts, notifyList },
