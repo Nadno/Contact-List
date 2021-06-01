@@ -49,38 +49,47 @@ export default class Header extends Component {
       placeholder: 'Encontrar contato',
     });
 
-    const $closeSearch = Component.createElement(
+    const $toggleSearch = Component.createElement(
       'button',
-      '<i class="fas fa-arrow-left"></i>',
+      `
+        <i class="fas fa-arrow-left close"></i>
+        <i class="fas fa-search open"></i>
+      `,
       {
-        className: 'search__close ',
+        className: 'button icon-btn',
       }
     );
 
     const $searchBar = Component.createElement(
       'form',
-      [$closeSearch, $search],
+      [$toggleSearch, $search],
       {
         className: 'search-bar',
       }
     );
 
-    const halfSecond = 500;
-    $search.addEventListener(
-      'input',
-      AsyncUtil.debounce(this.handleFindContact, halfSecond)
-    );
-
     const { emitter } = this.ctx;
-    const turnResultOn = () => emitter.emit('toggleResult', 'on');
-    $search.addEventListener('focus', turnResultOn);
 
-    const turnResultOff = (e: Event) => {
-      e.preventDefault();
+    const halfSecond = 500;
+    const searchOnChange = AsyncUtil.debounce((e: Event) => {
+      if (!this.$header.matches('.search-mode')) emitter.emit('toggleResult');
+      this.searchOnChange(e);
+    }, halfSecond);
+
+    $search.addEventListener('input', searchOnChange);
+
+    const ThreeHundredMS = 300;
+    const limitToggleResultTrigger = AsyncUtil.throttle(() => {
       $search.value = '';
-      emitter.emit('toggleResult', 'off');
+      emitter.emit('toggleResult');
+    }, ThreeHundredMS);
+
+    const handleToggleResult = (e: Event) => {
+      e.preventDefault();
+      limitToggleResultTrigger();
     };
-    $closeSearch.addEventListener('click', turnResultOff);
+
+    $toggleSearch.addEventListener('click', handleToggleResult);
 
     return $searchBar;
   }
