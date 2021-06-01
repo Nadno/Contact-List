@@ -1,20 +1,22 @@
-%button {
-  all: unset;
-
+.button {
   cursor: pointer;
 
-  height: 3.2rem;
+  height: 100%;
   font-size: var(--fs-16);
-  padding: 0.4rem 0.8rem;
   color: var(--tertiary-clr);
+
+  border: none;
+  background-color: var(--secondary-clr);
 
   display: flex;
   justify-content: center;
   align-items: center;
 
+  transition: transform 200ms ease-in-out;
+
   @media (hover) {
     &:hover {
-      opacity: 0.7;
+      transform: scale(1.15);
     }
   }
 
@@ -26,37 +28,35 @@
   &:active {
     transform: scale(0.95);
   }
-}
 
-.button {
-  @extend %button;
-  min-width: 7.2rem;
-  border-radius: 0.4rem;
-  border: 1px solid var(--tertiary-clr);
-  background-color: var(--secondary-clr);
+  &.default-btn {
+    height: 3.2rem;
+    min-width: 7.2rem;
+    padding: 0.4rem 0.8rem;
+    border-radius: 0.4rem;
+    border: 1px solid var(--tertiary-clr);
 
-  transition: opacity 200ms ease-in-out, transform 200ms ease;
+    &.--red {
+      color: var(--secondary-clr);
+      background-color: var(--cancel-clr);
+      border: 1px solid rgb(196, 75, 53);
 
-  &.--red {
-    color: var(--secondary-clr);
-    background-color: var(--cancel-clr);
-    border: 1px solid rgb(196, 75, 53);
-
-    &:focus {
-      outline-color: var(--cancel-clr);
+      &:focus {
+        outline-color: var(--cancel-clr);
+      }
     }
   }
-}
 
-.back-button {
-  @extend %button;
-  border: none;
-  color: var(--tertiary-clr);
-  font-size: var(--fs-24);
-  background-color: initial;
+  &.icon-btn {
+    border: none;
+    width: 5rem;
+    color: var(--tertiary-clr);
+    font-size: var(--fs-24);
+    background-color: initial;
 
-  &:focus {
-    outline-color: var(--tertiary-clr);
+    &:focus {
+      outline-color: var(--tertiary-clr);
+    }
   }
 }
 
