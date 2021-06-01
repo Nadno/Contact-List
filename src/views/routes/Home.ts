@@ -46,20 +46,15 @@ export default class Home extends PageComponent {
     this.renderContacts = this.renderContacts.bind(this);
   }
 
-  public toggleResult(turn: 'on' | 'off') {
+  public toggleResult() {
     const [$header, $contactList, $resultList] = this.$elements;
-    const $searchBar = $header.querySelector('.search-bar');
+    if (!$header) return;
 
-    if ($searchBar) {
-      const actions = { on: 'add', off: 'remove' };
-      const toggle = actions[turn] as 'add' | 'remove';
+    $header.classList.toggle('search-mode');
+    $resultList.classList.toggle('on');
+    $contactList.classList.toggle('--hidden');
 
-      $searchBar.classList[toggle]('on');
-      $resultList.classList[toggle]('on');
-      $contactList.classList[toggle]('--hidden');
-
-      if (turn === 'off') $resultList.innerHTML = '';
-    }
+    $resultList.innerHTML = '';
   }
 
   private removeContactList(letterKey: string): void {
