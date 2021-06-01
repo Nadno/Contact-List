@@ -49,6 +49,8 @@ a {
   outline-offset: 2px;
 }
 
+@import './components/button';
+
 @import './layouts/header';
 @import './layouts/modal';
 @import './layouts/notifies';
