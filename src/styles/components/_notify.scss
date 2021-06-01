@@ -1,0 +1,41 @@
+.notify {
+  position: relative;
+  transform: translateX(150%);
+  opacity: 0;
+
+  padding: 0.8rem 2.4rem 0.8rem 1.6rem;
+  background-color: #fff;
+  border: 0.2rem solid var(--primary-clr);
+  border-left: 0.4rem solid tomato;
+  box-shadow: 0 0 6px rgba($color: #000000, $alpha: 0.085);
+
+  transition: transform 400ms linear, opacity 400ms linear;
+
+  &__highlight {
+    font-weight: bold;
+    color: var(--tertiary-clr);
+  }
+
+  &__content {
+    display: block;
+    font-size: var(--fs-16);
+    line-height: var(--lh-16);
+    color: var(--tertiary-clr);
+
+    padding-right: 1.6rem;
+  }
+
+  &__buttons {
+    display: flex;
+    margin-top: 1.6rem;
+
+    & > .button:not(:last-child) {
+      margin-right: 1.6rem;
+    }
+  }
+}
+
+.notify.show {
+  opacity: 1;
+  transform: translateX(0);
+}
