@@ -27,7 +27,11 @@ body {
   --header-height: 4.8rem;
 }
 
-#app {
+.fas {
+  pointer-events: none !important;
+}
+
+.app {
   position: relative;
   width: 100%;
   height: auto;
