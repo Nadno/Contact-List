@@ -1,33 +1,44 @@
+type WrapperCallback<C extends (...args: any) => any> = (
+  ...args: Parameters<C>
+) => void;
+
 class AsyncUtil {
-  public debounce<FN extends Function>(cb: FN, ms: number) {
+  public debounce<C extends (...args: any) => any>(
+    cb: C,
+    ms: number
+  ): WrapperCallback<C> {
     let currentTimeout: any;
 
-    function debouncedFn(this: ThisParameterType<FN>) {
+    const debouncedCb: WrapperCallback<C> = (...args) => {
       if (currentTimeout) clearTimeout(currentTimeout);
-      const args = arguments;
 
-      const finalizeDebounce = () => {
-        cb.apply(this, args);
+      const finishDebounce = () => {
+        cb.apply(null, args);
         currentTimeout = undefined;
       };
-      currentTimeout = setTimeout(finalizeDebounce, ms);
-    }
+      currentTimeout = setTimeout(finishDebounce, ms);
+    };
 
-    return debouncedFn;
+    return debouncedCb;
   }
 
-  public throttle<FN extends Function>(cb: FN, ms: number) {
+  public throttle<C extends (...args: any) => any>(
+    cb: C,
+    ms: number
+  ): WrapperCallback<C> {
     let wait = false;
 
-    function throttledFn(this: ThisParameterType<FN>) {
+    const throttledCb: WrapperCallback<C> = async (...args) => {
       if (wait) return;
-
+      
       wait = !wait;
-      cb.apply(this, arguments);
-      setTimeout(() => (wait = !wait), ms);
-    }
+      cb.apply(null, args);
 
-    return throttledFn;
+      await this.sleep(ms);
+      wait = !wait;
+    };
+
+    return throttledCb;
   }
 
   public sleep(ms: number): Promise<void> {
