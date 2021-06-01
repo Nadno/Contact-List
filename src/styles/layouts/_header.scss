@@ -53,3 +53,19 @@
     }
   }
 }
+
+.header.search-mode {
+  .search-bar .icon-btn {
+    .open {
+      opacity: 0;
+    }
+
+    .close {
+      opacity: 1;
+    }
+  }
+
+  .add-contact {
+    display: none;
+  }
+}
