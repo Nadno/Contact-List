@@ -2,7 +2,19 @@
   height: calc(100vh - var(--header-height));
   list-style: none;
   overflow-y: scroll;
-  padding-bottom: 12rem;
+
+  scrollbar-width: none;
+  scroll-behavior: smooth;
+
+  &::-webkit-scrollbar {
+    width: 0;
+  }
+
+  &::after {
+    content: '';
+    display: block;
+    padding-bottom: 12rem;
+  }
 }
 
 .contact-list {
