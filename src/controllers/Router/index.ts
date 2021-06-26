@@ -34,8 +34,6 @@ export default class Router implements IRouter {
   }
 
   public goTo(href: string): void {
-    if (href === this.location.href) return;
-
     history.pushState(null, '', href);
     this.renderPath();
   }
