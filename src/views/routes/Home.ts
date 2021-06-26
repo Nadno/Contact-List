@@ -24,7 +24,7 @@ export default class Home extends PageComponent {
     this.setTitle('Lista de contatos');
 
     const header = new Header(ctx);
-    ctx.emitter.on('updateResultList', header.updateResultList);
+    ctx.emitter.on('updateResultList', header.search.updateResultList);
 
     const useNullElement = true;
     this.contactList = new Contacts(
@@ -66,7 +66,7 @@ export default class Home extends PageComponent {
 
       $listContainer.remove();
     } catch (err) {
-      console.log(err);
+      console.error(err);
     }
   }
 
@@ -83,7 +83,7 @@ export default class Home extends PageComponent {
       if (!contacts.length) return this.removeContactList(letterKey);
       $contactList.innerHTML = '';
 
-      const renderContact = (contact: IContact, index: number) =>
+      const renderContact = (contact: IContact, _: any, index: number) =>
         this.contactList.addContact(
           { contact, letterKey, index },
           $contactList
