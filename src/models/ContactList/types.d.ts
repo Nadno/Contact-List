@@ -19,11 +19,20 @@ export interface IContactsList {
   forEachList(
     cb: (contacts: ILinkedList<IContact>, letterKey: string) => any
   ): void;
-  getContact(key: string, index: number): IListNode<IContact> | undefined;
+  getLetterKey(name: string): string;
+  getList(letterKey: string): ILinkedList<IContact> | undefined;
+  getContact(letterKey: string, index: number): IListNode<IContact> | undefined;
   findAll(name: string): ILinkedList<ContactAndPosition>;
-  editContact(data: Partial<IContact>, position: ContactPosition): boolean;
-  createContact(contact: IContact): void;
-  deleteContacts(contactsPositions: ContactPositions): ILinkedList<IContact>;
+  editContact(
+    data: Partial<IContact>,
+    position: ContactPosition
+  ): IListNode<IContact> | undefined;
+  createContact(contact: IContact): IListNode<IContact> | undefined;
+  deleteContact(
+    key: string,
+    contact: IListNode<IContact>
+  ): IListNode<IContact> | undefined;
+  deleteContacts(contactsPositions: ContactPositions): IListNode<IContact>[];
 }
 
 export interface ContactAndPosition extends ContactPosition {
