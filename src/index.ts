@@ -8,6 +8,6 @@ document.addEventListener('DOMContentLoaded', () => {
     const app = App.createApp();
     app.start();
   } catch (err) {
-    console.log(err);
+    console.error(err);
   }
 });
