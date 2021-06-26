@@ -40,118 +40,122 @@ export default class ContactList implements IContactsList {
 		this.lists[letterKey] = new LinkedArray<IContact>();
 	}
 
-  public getList(letterKey: string): ILinkedList<IContact> | undefined {
-    const normalizedKey =
-      this.stringUtil.normalize(letterKey) || ContactList.especialKey;
+	public getList(query: string): ILinkedArray<IContact> | undefined {
+		if (query.length > 1) {
+			return this.lists[this.getLetterKey(query)];
+		}
 
-    if (normalizedKey.length !== 1) return undefined;
-    return this.lists[letterKey];
-  }
+		const normalizedKey =
+			this.stringUtil.normalize(query) || ContactList.especialKey;
 
-  public getLetterKey(name: string): string {
-    const letterKey = this.stringUtil.normalize(name)[0];
+		if (normalizedKey.length !== 1) return undefined;
+		return this.lists[query];
+	}
 
-    if (!letterKey) return ContactList.especialKey;
-    if (ContactList.ALPHABET_KEYS.includes(letterKey)) return letterKey;
+	public getLetterKey(name: string): string {
+		const letterKey = this.stringUtil.normalize(name)[0];
 
-    return ContactList.especialKey;
-  }
+		if (!letterKey) return ContactList.especialKey;
+		if (ContactList.ALPHABET_KEYS.includes(letterKey)) return letterKey;
 
-  public getContact(
-    key: string = '',
-    index: number
-  ): IListNode<IContact> | undefined {
-    const list = this.getList(key);
-    if (!list) return list;
+		return ContactList.especialKey;
+	}
 
-    return list.at(index);
-  }
+	public getContact(
+		key: string = '',
+		index: number
+	): IListNode<IContact> | undefined {
+		const list = this.getList(key);
+		if (!list) return list;
 
-  public findAll(name: string): ILinkedList<ContactAndPosition> {
-    const result = new LinkedList<ContactAndPosition>();
-    const { likeMatch, normalize } = this.stringUtil;
+		return list.at(index);
+	}
 
-    const normalizedName = normalize(name);
-    const startByLetterKey = normalizedName[0];
+	public findAll(name: string): ILinkedArray<ContactAndPosition> {
+		const result = new LinkedArray<ContactAndPosition>();
+		const { likeMatch, normalize } = this.stringUtil;
 
-    const search = (contacts: ILinkedList<IContact>, letterKey: string) => {
-      const searchInList = (contact: IContact, index: number) => {
-        if (likeMatch(normalize(contact.name), normalizedName)) {
-          result.push({ contact, letterKey, index });
-        }
-      };
-      contacts.forEach(searchInList);
-    };
+		const normalizedName = normalize(name);
+		const startByLetterKey = normalizedName[0];
 
-    this.forEachList(search, startByLetterKey);
+		const search = (contacts: ILinkedArray<IContact>, letterKey: string) => {
+			const searchInList = (contact: IContact, _: any, index: number) => {
+				if (likeMatch(normalize(contact.name), normalizedName)) {
+					result.push({ contact, letterKey, index });
+				}
+			};
+			contacts.forEach(searchInList);
+		};
 
-    return result;
-  }
+		this.forEachList(search, startByLetterKey);
 
-  public editContact(
-    data: Partial<IContact>,
-    { letterKey, index }: ContactPosition
-  ): IListNode<IContact> | undefined {
-    const list = this.lists[letterKey];
+		return result;
+	}
 
-    const contact = list.at(index);
-    if (!contact) throw new Error('Contact not found');
+	public editContact(
+		data: Partial<IContact>,
+		{ letterKey, index }: ContactPosition
+	): IListNode<IContact> | undefined {
+		const list = this.lists[letterKey];
 
-    const isNewName = data.name && data.name !== contact.value.name;
-    if (isNewName) {
-      const deletedContact = this.deleteContact(letterKey, contact);
-      if (!deletedContact) return;
+		const contact = list.at(index);
+		if (!contact) throw new Error('Contact not found');
 
-      const newContact = Object.assign({}, { ...contact.value, ...data });
-      this.createContact(newContact);
+		const isNewName = data.name && data.name !== contact.value.name;
+		if (isNewName) {
+			const deletedContact = this.deleteContact(letterKey, contact);
+			if (!deletedContact) return;
 
-      return deletedContact;
-    }
+			const newContact = Object.assign({}, { ...contact.value, ...data });
+			this.createContact(newContact);
 
-    Object.assign(contact.value, data);
-    return contact;
-  }
+			return deletedContact;
+		}
 
-  public createContact(contact: IContact): IListNode<IContact> | undefined {
-    const letterKey = this.getLetterKey(contact.name);
-    if (!this.lists[letterKey]) this.addList(letterKey);
+		Object.assign(contact.value, data);
+		return contact;
+	}
 
-    if (letterKey === ContactList.especialKey)
-      return this.lists[letterKey].insert('end', contact);
+	public createContact(contact: IContact): IListNode<IContact> | undefined {
+		const letterKey = this.getLetterKey(contact.name);
+		if (!this.lists[letterKey]) this.addList(letterKey);
 
-    return this.lists[letterKey].insertSort(contact, SORT_FUNCTION);
-  }
+		if (letterKey === ContactList.especialKey)
+			return this.lists[letterKey].insert('end', contact);
 
-  public addContacts(...contacts: IContact[]): void {
-    if (!contacts) return;
-    contacts.forEach(contact => this.createContact(contact));
-  }
+		return this.lists[letterKey].insertSort(contact, SORT_FUNCTION);
+	}
 
-  public deleteContact(
-    letterKey: string,
-    contact: IListNode<IContact>
-  ): IListNode<IContact> | undefined {
-    const deletedContact = this.lists[letterKey].remove(contact);
-    if (!this.lists[letterKey].length) delete this.lists[letterKey];
+	public addContacts(...contacts: IContact[]): void {
+		if (!contacts) return;
+		contacts.forEach((contact) => this.createContact(contact));
+	}
 
-    return deletedContact;
-  }
+	public deleteContact(
+		letterKey: string,
+		contact: IListNode<IContact>
+	): IListNode<IContact> | undefined {
+		const deletedContact = this.lists[letterKey].remove(contact);
+		if (!this.lists[letterKey].length) delete this.lists[letterKey];
 
-  public deleteContacts(contactsMap: ContactPositions): IListNode<IContact>[] {
-    const deletedContacts: IListNode<IContact>[] = [];
+		return deletedContact;
+	}
 
-    for (const key in contactsMap) {
-      const list = this.lists[key];
-      const contactsNodes = list.nodesAt(...contactsMap[key]);
+	public deleteContacts(contactsMap: ContactPositions): IListNode<IContact>[] {
+		const deletedContacts: IListNode<IContact>[] = [];
 
-      const deleteContactNode = (node: IListNode<IContact>) => {
-        let deletedNode = this.deleteContact(key, node);
-        if (deletedNode) deletedContacts.push(deletedNode);
-      };
+		for (const key in contactsMap) {
+			const list = this.lists[key];
+			const contactsNodes = list.nodesAt(...contactsMap[key]);
 
-      contactsNodes.forEach(deleteContactNode);
-    }
+			const deleteContactNode = (node: IListNode<IContact>) => {
+				let deletedNode = this.deleteContact(key, node);
+				if (deletedNode) deletedContacts.push(deletedNode);
+			};
 
-    return deletedContacts;
-  }
+			contactsNodes.forEach(deleteContactNode);
+		}
+
+		return deletedContacts;
+	}
 }
