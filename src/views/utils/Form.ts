@@ -1,91 +1,92 @@
-import LinkedList from '../../models/LinkedList';
+import LinkedArray from '../../models/LinkedList/LinkedArray';
 import Component from '../component';
+import { ILinkedArray } from '../../models/LinkedList/types';
 
 type EventHandler = (e: Event) => any;
 
 export interface CreateInput {
-  id: string;
-  name: string;
-  label?: string;
-  handleChange?: EventHandler;
-  [rest: string]: string | EventHandler | undefined;
+	id: string;
+	name: string;
+	label?: string;
+	handleChange?: EventHandler;
+	[rest: string]: string | EventHandler | undefined;
 }
 
 export default class Form<IniData extends Record<string, any>> {
-  private $formElement: HTMLFormElement | undefined;
+	private $formElement: HTMLFormElement | undefined;
 
-  private fieldset: LinkedList<HTMLElement> = new LinkedList();
-  private handleChange: EventHandler | undefined;
+	private fieldset: ILinkedArray<HTMLElement> = new LinkedArray<HTMLElement>();
+	private handleChange: EventHandler | undefined;
 
-  constructor(private data: IniData) {}
+	constructor(private data: IniData) {}
 
-  public setCurrentHandleChange(handleChange: EventHandler): this {
-    this.handleChange = handleChange;
-    return this;
-  }
+	public setCurrentHandleChange(handleChange: EventHandler): this {
+		this.handleChange = handleChange;
+		return this;
+	}
 
-  public createInput({
-    id,
-    name,
-    label,
-    handleChange = this.handleChange,
-    ...rest
-  }: CreateInput): this {
-    const $label = Component.createElement('label', label, {
-      className: 'input-block__label',
-      for: id,
-    });
+	public createInput({
+		id,
+		name,
+		label,
+		handleChange = this.handleChange,
+		...rest
+	}: CreateInput): this {
+		const $label = Component.createElement('label', label, {
+			className: 'input-block__label',
+			for: id,
+		});
 
-    const $input = Component.createElement('input', '', {
-      id,
-      name,
-      className: 'input-block__input',
-      ...rest,
-    });
-    $input.value = this.data[name as keyof IniData];
+		const $input = Component.createElement('input', '', {
+			id,
+			name,
+			className: 'input-block__input',
+			...rest,
+		});
+		$input.value = this.data[name as keyof IniData];
 
-    if (handleChange) $input.addEventListener('input', handleChange);
+		if (handleChange) $input.addEventListener('input', handleChange);
 
-    const $inputBlock = Component.createElement('div', [$label, $input], {
-      className: 'input-block',
-    });
+		const $inputBlock = Component.createElement('div', [$label, $input], {
+			className: 'input-block',
+		});
 
-    if (!this.fieldset.end)
-      throw new Error('You cannot create a input without a fieldset');
+		if (!this.fieldset.end)
+			throw new Error('You cannot create a input without a fieldset');
 
-    this.fieldset.end.value.appendChild($inputBlock);
+		this.fieldset.end.value.appendChild($inputBlock);
 
-    return this;
-  }
+		return this;
+	}
 
-  public createField(legend: string, inputs: Array<CreateInput>): this {
-    const $legend = Component.createElement('legend', legend);
+	public createField(legend: string, inputs: Array<CreateInput>): this {
+		const $legend = Component.createElement('legend', legend);
 
-    this.fieldset.push(Component.createElement('fieldset', [$legend]));
-    inputs.forEach(input => this.createInput(input));
+		this.fieldset.push(Component.createElement('fieldset', [$legend]));
+		inputs.forEach((input) => this.createInput(input));
 
-    return this;
-  }
+		return this;
+	}
 
-  public createForm(
-    formAttrs: {},
-    submit: string,
-    handleSubmit: EventHandler
-  ): { formElement: HTMLFormElement; data: IniData } {
-    const $submit = Component.createElement('button', submit, {
-      type: 'submit',
-      className: 'button default-btn',
-    });
+	public createForm(
+		formAttrs: {},
+		submit: string,
+		handleSubmit: EventHandler
+	): { formElement: HTMLFormElement; data: IniData } {
+		const $submit = Component.createElement('button', submit, {
+			type: 'submit',
+			className: 'button default-btn',
+		});
 
-    const $fields = this.fieldset.toArray();
-    this.$formElement = Component.createElement(
-      'form',
-      [...$fields, $submit],
-      formAttrs
-    );
+		const $fields = this.fieldset.toArray();
+		this.$formElement = Component.createElement(
+			'form',
+			[...$fields, $submit],
+			formAttrs
+		);
 
-    this.$formElement.addEventListener('submit', handleSubmit);
+		this.$formElement.addEventListener('submit', handleSubmit);
 
-    return { formElement: this.$formElement, data: this.data };
-  }
+		return { formElement: this.$formElement, data: this.data };
+	}
 }
