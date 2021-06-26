@@ -1,44 +1,44 @@
 import StringUtil from '../../utils/StringUtil';
-import LinkedList from '../LinkedList';
+import LinkedArray from '../LinkedList/LinkedArray';
 
-import { ILinkedList, IListNode } from '../LinkedList/types';
+import { ILinkedArray, IListNode } from '../LinkedList/types';
 import {
-  ContactAndPosition,
-  ContactPositions,
-  ContactPosition,
-  IContact,
-  IContactsList,
+	ContactAndPosition,
+	ContactPositions,
+	ContactPosition,
+	IContact,
+	IContactsList,
 } from './types';
 
 const SORT_FUNCTION = (a: IContact, b: IContact) => a.name < b.name;
 
 export default class ContactList implements IContactsList {
-  public static readonly ALPHABET_KEYS = 'abcdefghijklmnopqrstuvwxyz';
-  public static readonly especialKey = '#';
+	public static readonly ALPHABET_KEYS = 'abcdefghijklmnopqrstuvwxyz';
+	public static readonly especialKey = '#';
 
-  private lists: Record<string, LinkedList<IContact>> = {};
+	private lists: Record<string, ILinkedArray<IContact>> = {};
 
-  constructor(private stringUtil: StringUtil) {}
+	constructor(private stringUtil: StringUtil) {}
 
-  public forEachList(
-    cb: (contacts: ILinkedList<IContact>, letterKey: string) => any,
-    startByLetterKey: string = ''
-  ) {
-    const startKey = this.stringUtil.normalize(startByLetterKey);
-    const alphabetKeys = ContactList.ALPHABET_KEYS.replace(startKey, '');
+	public forEachList(
+		cb: (contacts: ILinkedArray<IContact>, letterKey: string) => any,
+		startByLetterKey: string = ''
+	) {
+		const startKey = this.stringUtil.normalize(startByLetterKey);
+		const alphabetKeys = ContactList.ALPHABET_KEYS.replace(startKey, '');
 
-    const keys = startKey + alphabetKeys + ContactList.especialKey;
+		const keys = startKey + alphabetKeys + ContactList.especialKey;
 
-    for (const letterKey of keys) {
-      if (letterKey in this.lists) cb(this.lists[letterKey], letterKey);
-    }
-  }
+		for (const letterKey of keys) {
+			if (letterKey in this.lists) cb(this.lists[letterKey], letterKey);
+		}
+	}
 
-  private addList(letterKey: string): void {
-    if (letterKey.length !== 1)
-      throw new Error('The key string exceeded the allowed length');
-    this.lists[letterKey] = new LinkedList<IContact>();
-  }
+	private addList(letterKey: string): void {
+		if (letterKey.length !== 1)
+			throw new Error('The key string exceeded the allowed length');
+		this.lists[letterKey] = new LinkedArray<IContact>();
+	}
 
   public getList(letterKey: string): ILinkedList<IContact> | undefined {
     const normalizedKey =
