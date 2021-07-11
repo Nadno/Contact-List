@@ -8,6 +8,7 @@ import FactoryContactActionsHandler from './views/Feedback/ContactActionsHandler
 
 import { IEmitter } from './controllers/Emitter/types';
 import { IContactsList } from './models/ContactList/types';
+import Fallback from './views/Fallback';
 
 export interface AppContext<S = any> {
   state: S;
@@ -25,8 +26,8 @@ export default class App<S = any> {
     ctx.emitter.on('renderRoute', render.renderRoute);
   }
 
-  public static createApp(): App {
-    const $app = document.getElementById('app') || document.body;
+  public static createApp($app: HTMLElement | null): App {
+    if (!$app) throw new Error("We can't create the app, missing app element");
 
     const emitter = new Emitter();
     const notifyList = new NotifyList('notifies');
@@ -36,7 +37,6 @@ export default class App<S = any> {
     );
 
     const router = new Router(location, emitter);
-    document.body.addEventListener('click', router.handleLinkClick);
 
     const context = {
       state: { contacts, notifyList },
@@ -44,7 +44,8 @@ export default class App<S = any> {
       router,
     };
 
-    const render = Render.createRender($app, context);
+    const routeFallback = () => Fallback.getFallbackView();
+    const render = new Render(routeFallback, $app, context);
     return new App<AppState>(context, render);
   }
 
@@ -52,6 +53,8 @@ export default class App<S = any> {
     this.setRoutes();
 
     const { router } = this.ctx;
+
+    document.body.addEventListener('click', router.handleLinkClick);
 
     router.renderPath();
     window.onpopstate = (e: PopStateEvent) => {
