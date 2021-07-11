@@ -1,4 +1,4 @@
-import NotFound from './routes/404';
+import Component from './component';
 import PageComponent, { PageConstructor } from './routes/PageComponent';
 
 export default class Render {
@@ -13,11 +13,6 @@ export default class Render {
     this.renderRoute = this.renderRoute.bind(this);
   }
 
-  public static createRender(rootElement: HTMLElement, ctx: any): Render {
-    const routeFallback = () => new NotFound();
-    return new Render(routeFallback, rootElement, ctx);
-  }
-
   public renderElements(content: HTMLElement[]): void {
     this.rootElement.innerHTML = '';
     content.forEach(el => this.rootElement.appendChild(el));
@@ -27,9 +22,14 @@ export default class Render {
     getView: () => Promise<PageConstructor>
   ): Promise<void> {
     if (this.currentPage.unMount) this.currentPage.unMount();
+    if (!document.body.contains(this.rootElement))
+      throw new Error(
+        "It wasn't possible to render the view. The root element does not exist."
+      );
 
     try {
       const view = await getView();
+
       this.currentPage = new view(this.ctx);
     } catch (err) {
       this.currentPage = this.routeFallback();
